@@ -1,0 +1,32 @@
+{
+  "typeMappings": [
+    {
+      "column": "^varchar(\\(\\d+\\))?$|^text$|^char(\\(\\d+\\))?$|^json$|^jsonb$",
+      "java": "String",
+      "kotlin": "String"
+    },
+    {
+      "column": "^boolean$|^bit(\\(1\\))?$|^bool$",
+      "java": "Boolean",
+      "javaPrimitives": "boolean",
+      "kotlin": "Boolean"
+    },
+    {
+      "column": "^int(\\(\\d+\\))?$|^integer(\\(\\d+\\))?$|^int[248]$|^smallint$",
+      "java": "Integer",
+      "javaPrimitives": "int",
+      "kotlin": "Int"
+    },
+    {
+      "column": "^date$|^time$|^datetime$|^timestamp$",
+      "java": "java.util.Date",
+      "kotlin": "java.util.Date"
+    },
+    {
+      "column": "^double precision$",
+      "java": "Double",
+      "javaPrimitives": "double",
+      "kotlin": "Double"
+    }
+  ]
+}

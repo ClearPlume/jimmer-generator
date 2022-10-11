@@ -1,0 +1,34 @@
+#if(!$package.blank)
+package $package;
+#end
+
+#foreach($import in $importList)
+import $import;
+#end
+
+#if($table.remark)/**
+* $table.remark
+*/
+#else/**
+* Entity for table "$table.name"
+*/
+#end
+@Entity
+public interface ${table.name} {
+#foreach($field in $table.fields)
+    #if($velocityCount != 1)
+
+    #end
+    #if($field.remark)
+    /**
+    * $field.remark
+    */
+    #end
+    #if(!$field.annotations.isEmpty())
+        #foreach($annotation in $field.annotations)
+        @$annotation
+        #end
+    #end
+    $field.type ${field.name}();
+#end
+}

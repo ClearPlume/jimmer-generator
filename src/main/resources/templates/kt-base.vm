@@ -1,0 +1,11 @@
+#if(!$package.blank)
+package $package;
+#end
+
+import org.babyfish.jimmer.sql.MappedSuperclass;
+
+/**
+* Base entity for table "$table.name"
+*/
+@MappedSuperclass
+interface ${table.name}Base

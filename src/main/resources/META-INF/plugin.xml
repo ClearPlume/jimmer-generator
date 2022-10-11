@@ -1,0 +1,37 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>top.fallenangel.jimmer-generator</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Jimmer-Generator</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="the.fallenangel.965@gmail.com" url="https://www.yourcompany.com">NONE</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+    为jimmer框架生成实体类，同时会自动生成实体类的父类，可以在父类中存放关联关系
+  ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.database</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="top.fallenangel.jimmergenerator.component.SettingStorageComponent"/>
+    </extensions>
+
+    <actions>
+        <action id="open jimmer generator window" class="top.fallenangel.jimmergenerator.MainEntry"
+                text="Entity Classes Generator" description="Entity class generator for use with Jimmer">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="after" relative-to-action="DatabaseView.AddActionGroupPopup"/>
+        </action>
+    </actions>
+</idea-plugin>
