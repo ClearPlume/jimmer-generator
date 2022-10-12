@@ -8,14 +8,34 @@
     <name>Jimmer-Generator</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="the.fallenangel.965@gmail.com" url="https://www.yourcompany.com">NONE</vendor>
+    <vendor email="the.fallenangel.965@gmail.com" url="https://clearplume.top/">the_FallenAngel(网站仍在建设中...)</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    为jimmer框架生成实体类，同时会自动生成实体类的父类，可以在父类中存放关联关系
+    <h3>English:</h3>
+    <ul>
+    <li>Support Java, Kotlin</li>
+    <li>Generate entity classes for the Jimmer framework, and automatically generate a parent class for each entity class, you can store the relationship in the parent class</li>
+    <li>Based on Database Tool plug-in development, supports most databases</li>
+    </ul>
+    <h3>中文：</h3>
+    <ul>
+    <li>支持Java、Kotlin</li>
+    <li>为Jimmer框架生成实体类，同时会自动生成实体类的父类，可以在父类中存放关联关系</li>
+    <li>基于Database Tool插件开发，支持大部分数据库</li>
   ]]></description>
+
+    <change-notes><![CDATA[
+    <p>1.0.0</p>
+    <ul>
+      <li>Plugin published</li>
+    </ul>
+    <ul>
+      <li>插件发布了</li>
+    </ul>
+    ]]></change-notes>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
