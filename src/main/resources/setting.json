@@ -1,32 +1,80 @@
 {
   "typeMappings": [
     {
-      "column": "^varchar(\\(\\d+\\))?$|^text$|^char(\\(\\d+\\))?$|^json$|^jsonb$",
-      "java": "String",
-      "kotlin": "String"
-    },
-    {
       "column": "^boolean$|^bit(\\(1\\))?$|^bool$",
       "java": "Boolean",
       "javaPrimitives": "boolean",
       "kotlin": "Boolean"
     },
     {
-      "column": "^int(\\(\\d+\\))?$|^integer(\\(\\d+\\))?$|^int[248]$|^smallint$",
+      "column": "^int2$|^smallserial$|^smallint$",
+      "java": "Short",
+      "javaPrimitives": "short",
+      "kotlin": "Short"
+    },
+    {
+      "column": "^int(\\(\\d+\\))?$|^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$",
       "java": "Integer",
       "javaPrimitives": "int",
       "kotlin": "Int"
     },
     {
-      "column": "^date$|^time$|^datetime$|^timestamp$",
-      "java": "java.util.Date",
-      "kotlin": "java.util.Date"
+      "column": "^float4?$|^real$",
+      "java": "Float",
+      "javaPrimitives": "float",
+      "kotlin": "Float"
     },
     {
-      "column": "^double precision$",
+      "column": "^double precision$|^float8$",
       "java": "Double",
       "javaPrimitives": "double",
       "kotlin": "Double"
+    },
+    {
+      "column": "^int8$|^serial8$|^bigserial$|^oid$|^bigint$",
+      "java": "Long",
+      "javaPrimitives": "long",
+      "kotlin": "Long"
+    },
+    {
+      "column": "^name(\\(\\d+\\))?$|^text$|^n?varchar(\\(\\d+\\))?$|^(n|bp)?char(\\(\\d+\\))?$|^json$|^jsonb$|^clob$",
+      "java": "String",
+      "kotlin": "String"
+    },
+    {
+      "column": "^bytea$|^(var)?binary(\\(\\d+\\))?$|^blob$|^tinyblob$|^mediumblob$|^longblob$",
+      "java": "byte[]",
+      "kotlin": "ByteArray"
+    },
+    {
+      "column": "^date$",
+      "java": "java.time.LocalDate",
+      "kotlin": "java.time.LocalDate"
+    },
+    {
+      "column": "^time$",
+      "java": "java.time.LocalTime",
+      "kotlin": "java.time.LocalTime"
+    },
+    {
+      "column": "^timetz$",
+      "java": "java.time.OffsetTime",
+      "kotlin": "java.time.OffsetTime"
+    },
+    {
+      "column": "^datetime$|^timestamp$",
+      "java": "java.time.LocalDateTime",
+      "kotlin": "java.time.LocalDateTime"
+    },
+    {
+      "column": "^timestamptz$",
+      "java": "java.time.OffsetDateTime",
+      "kotlin": "java.time.OffsetDateTime"
+    },
+    {
+      "column": "^dec$|^decimal$|^numeric$",
+      "java": "java.math.BigDecimal",
+      "kotlin": "java.math.BigDecimal"
     }
   ]
 }

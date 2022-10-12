@@ -67,7 +67,7 @@ private fun String.uncapitalize(): String {
 private fun DasColumn.captureType(language: Language): String {
     val typeMappings = SettingStorageComponent.storage.state.typeMappings
     for (typeMapping in typeMappings) {
-        if (Regex(typeMapping.column).matches(dataType.specification)) {
+        if (Regex(typeMapping.column, RegexOption.IGNORE_CASE).matches(dataType.specification)) {
             return when (language) {
                 Language.JAVA -> if (DasUtil.isPrimary(this)) typeMapping.javaPrimitives!! else typeMapping.java
                 Language.KOTLIN -> if (isNotNull) typeMapping.kotlin else "${typeMapping.kotlin}?"
