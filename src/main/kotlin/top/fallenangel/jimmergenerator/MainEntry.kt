@@ -64,7 +64,7 @@ class MainEntry : AnAction() {
             val table = Table(tableEntityName, it.fields(language), it.comment)
             val velocityContext = VelocityContext().apply {
                 put("package", selectedPackage)
-                put("importList", table.captureImportList(language))
+                put("importList", table.captureImportList())
                 put("table", table.removeClassPackage())
             }
 

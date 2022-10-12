@@ -81,14 +81,8 @@ private fun DasColumn.captureType(language: Language): String {
     }
 }
 
-fun Table.captureImportList(language: Language): List<String> {
-    val types = SettingStorageComponent.storage.state.typeMappings
-            .map {
-                when (language) {
-                    Language.JAVA -> it.java
-                    Language.KOTLIN -> it.kotlin
-                }
-            }
+fun Table.captureImportList(): List<String> {
+    val types = fields.map { it.type }
             .distinct()
             .filter { it.contains('.') }
             .toMutableList().apply { add("org.babyfish.jimmer.sql.Entity") }
