@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "top.fallenangel"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -45,13 +45,7 @@ tasks {
         untilBuild.set("223.*")
     }
 
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
     publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+        channels.add("Stable")
     }
 }
