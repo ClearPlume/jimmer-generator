@@ -91,13 +91,20 @@ fun Table.captureImportList(): List<String> {
             .distinct()
             .filter { it.contains('.') }
     return (types + annotations)
+            .asSequence()
+            .map {
+                if (it.endsWith('?')) {
+                    return@map it.take(it.length - 1)
+                }
+                it
+            }
             .map {
                 val lastDotIndex = it.lastIndexOf('.')
                 it.substring(0, lastDotIndex) to it.substring(lastDotIndex + 1)
             }
             .groupBy { it.first }
             .map {
-                if (it.value.size == 1) {
+                if (it.value.distinct().size == 1) {
                     "${it.key}.${it.value[0].second}"
                 } else {
                     "${it.key}.*"
