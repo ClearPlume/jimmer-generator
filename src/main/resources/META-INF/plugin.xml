@@ -8,7 +8,7 @@
     <name>Jimmer-Generator</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="the.fallenangel.965@gmail.com" url="https://clearplume.top/">the_FallenAngel(网站仍在建设中...)</vendor>
+    <vendor email="the.fallenangel.965@gmail.com" url="https://clearplume.top/">the_FallenAngel</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
@@ -16,15 +16,15 @@
     <description><![CDATA[
     <h3>English:</h3>
     <ul>
-    <li>Support Java, Kotlin</li>
-    <li>Generate entity classes for the Jimmer framework, and automatically generate a parent class for each entity class, you can store the relationship in the parent class</li>
-    <li>Based on Database Tool plug-in development, supports most databases</li>
+    <li>Generate entity class interfaces for the Jimmer framework, supporting Java, Kotlin</li>
+    <li>Automatically generate a parent interface for each entity class interface, you can store the association relationship in the parent interface</li>
+    <li>Based on the Database Tool plug-in, it theoretically supports most databases, and currently validates PostgreSQL, MySQL</li>
     </ul>
     <h3>中文：</h3>
     <ul>
-    <li>支持Java、Kotlin</li>
-    <li>为Jimmer框架生成实体类，同时会自动生成实体类的父类，可以在父类中存放关联关系</li>
-    <li>基于Database Tool插件开发，支持大部分数据库</li>
+    <li>为Jimmer框架生成实体类接口，支持Java、Kotlin</li>
+    <li>自动为每一个实体类接口生成一个父类接口，可以在父类接口中存放关联关系</li>
+    <li>基于Database Tool插件开发，理论上支持大部分数据库，目前已验证PostgreSQL、MySQL</li>
   ]]></description>
 
     <change-notes><![CDATA[
