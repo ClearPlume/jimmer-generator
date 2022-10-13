@@ -14,7 +14,7 @@ import $import
 */
 #end
 @Entity
-interface ${table.name} {
+interface $table.name : ${table.name}Base {
 #foreach($field in $table.fields)
     #if($velocityCount != 1)
 

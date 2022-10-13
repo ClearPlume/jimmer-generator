@@ -14,7 +14,7 @@ import $import;
 */
 #end
 @Entity
-public interface ${table.name} {
+public interface $table.name extends ${table.name}Base {
 #foreach($field in $table.fields)
     #if($velocityCount != 1)
 

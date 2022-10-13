@@ -1,8 +1,8 @@
 #if(!$package.blank)
-package $package;
+package $package
 #end
 
-import org.babyfish.jimmer.sql.MappedSuperclass;
+import org.babyfish.jimmer.sql.MappedSuperclass
 
 /**
 * Base entity for table "$table.name"
