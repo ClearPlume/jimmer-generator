@@ -11,6 +11,8 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
+private val DEFAULT_CLASSES = mutableListOf("org.babyfish.jimmer.sql.Entity")
+
 object ResourceUtil {
     fun getResourceAsStream(resource: String): InputStream {
         return ResourceUtil::class.java.getResourceAsStream(resource)!!
@@ -82,17 +84,24 @@ private fun DasColumn.captureType(language: Language): String {
 }
 
 fun Table.captureImportList(): List<String> {
-    val types = fields.map { it.type }
-            .distinct()
-            .filter { it.contains('.') }
-            .toMutableList().apply { add("org.babyfish.jimmer.sql.Entity") }
-    val annotations = fields.map { it.annotations }
-            .flatten()
-            .distinct()
-            .filter { it.contains('.') }
-    return (types + annotations)
-            .asSequence()
+    val classes = DEFAULT_CLASSES.apply {
+        // 实体类中用到的所有全限定类名
+        addAll(
+            fields.map { it.type }
+                .distinct()
+                .filter { it.contains('.') }
+        )
+        // 实体类中用到的所有注解
+        addAll(
+            fields.map { it.annotations }
+                .flatten()
+                .distinct()
+                .filter { it.contains('.') }
+        )
+    }
+    return classes.asSequence()
             .map {
+                // kotlin中的可空类型是以“?”结尾，需要去除
                 if (it.endsWith('?')) {
                     return@map it.take(it.length - 1)
                 }
