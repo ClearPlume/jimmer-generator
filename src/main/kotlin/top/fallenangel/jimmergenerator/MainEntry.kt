@@ -26,7 +26,7 @@ import java.io.StringWriter
 class MainEntry : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
         // 选择生成哪种语言的实体类
-        val language = if (Messages.OK == Messages.showOkCancelDialog("Select which language entity classes to generate", "Choose Language", "Java", "Kotlin", null)) {
+        val language = if (Messages.OK == Messages.showOkCancelDialog("Select which language entity class interface to generate", "Choose Entity Language", "Java", "Kotlin", null )) {
             Language.JAVA
         } else {
             Language.KOTLIN
