@@ -37,7 +37,10 @@ tasks {
     }
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "11"
+        kotlinOptions.apply {
+            jvmTarget = "11"
+            apiVersion = "1.7"
+        }
     }
 
     patchPluginXml {
