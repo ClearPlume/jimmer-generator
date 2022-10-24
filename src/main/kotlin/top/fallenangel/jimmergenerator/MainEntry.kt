@@ -47,7 +47,7 @@ class MainEntry : AnAction() {
         }
         val selectedModulePath = ModuleRootManager.getInstance(selectedModule)
                 .getSourceRoots(false)
-                .find { it.name.matches(Regex("^kotlin$|^java$")) }!!
+                .find { it.name.matches(Regex("^kotlin$|^java$")) && !it.path.contains("ksp") }!!
                 .path
 
         // 选择保存包
