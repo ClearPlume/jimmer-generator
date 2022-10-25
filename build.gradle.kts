@@ -19,8 +19,8 @@ dependencies {
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     pluginName.set("JimmerGenerator")
-    version.set("2021.3.3")
     type.set("IU") // Target IDE Platform
+    version.set("2020.3.4")
     plugins.set(
         listOf(
             "java",
@@ -44,8 +44,12 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("213")
+        sinceBuild.set("203")
         untilBuild.set("223.*")
+    }
+
+    runIde {
+        jvmArgs("-Xms128m", "-Xmx4096m", "-XX:ReservedCodeCacheSize=512m")
     }
 
     publishPlugin {
