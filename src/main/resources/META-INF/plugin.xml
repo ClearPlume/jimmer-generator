@@ -28,6 +28,32 @@
   ]]></description>
 
     <change-notes><![CDATA[
+    <p>1.1.0</p>
+    <ul>
+      <li>Minimum supported version adjusted to 2020.3.4</li>
+      <li>Annotation adjustment of the primary key field in the generated interface classes(GeneratedValue -> GeneratedValue(strategy = GenerationType.IDENTITY))</li>
+      <li>bug fixes</li>
+      <ul>
+          <li>In kotlin projects, the generated entity class interfaces will appear in the ksp folder</li>
+          <li>Possible errors when an option is cancelled in the middle</li>
+      </ul>
+    </ul>
+    <ul>
+      <li>最低支持的版本调整为2020.3.4</li>
+      <li>生成的接口类中，主键字段的注解调整(GeneratedValue -> GeneratedValue(strategy = GenerationType.IDENTITY))</li>
+      <li>修复bug</li>
+      <ul>
+          <li>kotlin项目中，生成的实体类接口会出现在ksp文件夹里</li>
+          <li>中途某个选项取消时，可能会有的报错</li>
+      </ul>
+    </ul>
+    <p>1.0.1</p>
+    <ul>
+      <li>Optimize the logic of inserting package importing code blocks for the generated interface classes</li>
+    </ul>
+    <ul>
+      <li>优化为生成的接口类插入导包代码块的逻辑</li>
+    </ul>
     <p>1.0.0</p>
     <ul>
       <li>Plugin published</li>
