@@ -11,8 +11,6 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
-private val DEFAULT_CLASSES = mutableListOf("org.babyfish.jimmer.sql.Entity")
-
 object ResourceUtil {
     fun getResourceAsStream(resource: String): InputStream {
         return ResourceUtil::class.java.getResourceAsStream(resource)!!
@@ -44,7 +42,7 @@ fun DbTable.fields(language: Language): List<Field> {
                 val annotations = mutableListOf<String>()
                 if (primary) {
                     annotations.add("org.babyfish.jimmer.sql.Id")
-                    annotations.add("org.babyfish.jimmer.sql.GeneratedValue")
+                    annotations.add("org.babyfish.jimmer.sql.GeneratedValue(strategy = GenerationType.IDENTITY)")
                 }
                 if (language == Language.JAVA && nullable) {
                     annotations.add("javax.validation.constraints.Null")
@@ -71,7 +69,7 @@ private fun DasColumn.captureType(language: Language): String {
     for (typeMapping in typeMappings) {
         if (Regex(typeMapping.column, RegexOption.IGNORE_CASE).matches(dataType.specification)) {
             return when (language) {
-                Language.JAVA -> if (DasUtil.isPrimary(this)) typeMapping.javaPrimitives!! else typeMapping.java
+                Language.JAVA -> if (DasUtil.isPrimary(this) && typeMapping.javaPrimitives != null) typeMapping.javaPrimitives else typeMapping.java
                 Language.KOTLIN -> if (isNotNull) typeMapping.kotlin else "${typeMapping.kotlin}?"
             }
         }
@@ -84,7 +82,7 @@ private fun DasColumn.captureType(language: Language): String {
 }
 
 fun Table.captureImportList(): List<String> {
-    val classes = DEFAULT_CLASSES.apply {
+    val classes = mutableListOf("org.babyfish.jimmer.sql.Entity").apply {
         // 实体类中用到的所有全限定类名
         addAll(
             fields.map { it.type }
@@ -108,8 +106,9 @@ fun Table.captureImportList(): List<String> {
                 it
             }
             .map {
-                val lastDotIndex = it.lastIndexOf('.')
-                it.substring(0, lastDotIndex) to it.substring(lastDotIndex + 1)
+                val (clazz) = it.split("(")
+                val lastDotIndex = clazz.lastIndexOf('.')
+                clazz.substring(0, lastDotIndex) to clazz.substring(lastDotIndex + 1)
             }
             .groupBy { it.first }
             .map {
@@ -126,7 +125,9 @@ fun Table.removeClassPackage(): Table {
     for (field in fields) {
         field.type = field.type.substringAfterLast('.')
         field.annotations.forEachIndexed { index, annotation ->
-            field.annotations[index] = annotation.substringAfterLast('.')
+            val (clazz) = annotation.split("(")
+            val lastDotIndex = clazz.lastIndexOf('.')
+            field.annotations[index] = annotation.substring(lastDotIndex + 1)
         }
     }
     return this
