@@ -11,6 +11,7 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -26,10 +27,10 @@ import java.io.StringWriter
 class MainEntry : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
         // 选择生成哪种语言的实体类
-        val language = if (Messages.OK == Messages.showOkCancelDialog("Select which language entity class interface to generate", "Choose Entity Language", "Java", "Kotlin", null )) {
-            Language.JAVA
-        } else {
-            Language.KOTLIN
+        val language = when (Messages.showYesNoCancelDialog("Select which language entity class interface to generate", "Choose Entity Language", "Java", "Kotlin", "Cancel", null)) {
+            Messages.YES -> Language.JAVA
+            Messages.NO -> Language.KOTLIN
+            else -> return
         }
 
         val project = event.project ?: return
@@ -52,6 +53,9 @@ class MainEntry : AnAction() {
 
         // 选择保存包
         val packageChooser = PackageChooserDialog("Package Chooser", selectedModule).apply { show() }
+        if (packageChooser.exitCode != DialogWrapper.OK_EXIT_CODE) {
+            return
+        }
         val selectedPackage = packageChooser.selectedPackage?.qualifiedName ?: ""
         val selectedPath = "$selectedModulePath/${selectedPackage.replace('.', '/')}"
 

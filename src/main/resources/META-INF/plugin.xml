@@ -36,6 +36,7 @@
       <ul>
           <li>In kotlin projects, the generated entity class interfaces will appear in the ksp folder</li>
           <li>Possible errors when an option is cancelled in the middle</li>
+          <li>When you select the save package path for the entity class interface, the entity class interfaces will be generated even if you deselect it</li>
       </ul>
     </ul>
     <ul>
@@ -44,7 +45,8 @@
       <li>修复bug</li>
       <ul>
           <li>kotlin项目中，生成的实体类接口会出现在ksp文件夹里</li>
-          <li>中途某个选项取消时，可能会有的报错</li>
+          <li>中途某个选项取消时，可能会有报错</li>
+          <li>选择实体类接口的保存包路径时，即使取消选择，也会生成实体类接口</li>
       </ul>
     </ul>
     <p>1.0.1</p>
