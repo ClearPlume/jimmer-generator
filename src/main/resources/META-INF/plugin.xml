@@ -1,5 +1,5 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
+<idea-plugin require-restart="true">
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
     <id>top.fallenangel.jimmer-generator</id>
 
@@ -28,35 +28,41 @@
   ]]></description>
 
     <change-notes><![CDATA[
-    <p>1.1.0</p>
+    <p><b>1.1.1(2022-10-27)</b></p>
     <ul>
-      <li>Minimum supported version adjusted to 2020.3.4</li>
-      <li>Annotation adjustment of the primary key field in the generated interface classes(GeneratedValue -> GeneratedValue(strategy = GenerationType.IDENTITY))</li>
-      <li>bug fixes</li>
-      <ul>
-          <li>In kotlin projects, the generated entity class interfaces will appear in the ksp folder</li>
-          <li>Possible errors when an option is cancelled in the middle</li>
-          <li>When you select the save package path for the entity class interface, the entity class interfaces will be generated even if you deselect it</li>
-      </ul>
+        <li><b>(Bug Fix)</b>JimmerGenerator on PersistentStateComponent, and may report an error if it runs directly after installation</li>
+        <li><b>(Optimize)</b>Change Notes adjustment, adding split line, bold version number, optimize the reading experience</li>
     </ul>
     <ul>
-      <li>最低支持的版本调整为2020.3.4</li>
-      <li>生成的接口类中，主键字段的注解调整(GeneratedValue -> GeneratedValue(strategy = GenerationType.IDENTITY))</li>
-      <li>修复bug</li>
-      <ul>
-          <li>kotlin项目中，生成的实体类接口会出现在ksp文件夹里</li>
-          <li>中途某个选项取消时，可能会有报错</li>
-          <li>选择实体类接口的保存包路径时，即使取消选择，也会生成实体类接口</li>
-      </ul>
+        <li><b>(修复bug)</b>JimmerGenerator依赖了PersistentStateComponent，安装后直接运行有可能报错</li>
+        <li><b>(优化)</b>Change Notes 调整，加入分割线，版本号加粗，优化阅读体验</li>
     </ul>
-    <p>1.0.1</p>
+    <hr/>
+    <p><b>1.1.0(2022-10-26)</b></p>
     <ul>
-      <li>Optimize the logic of inserting package importing code blocks for the generated interface classes</li>
+      <li><b>(Feature)</b>Minimum supported version adjusted to 2020.3.4</li>
+      <li><b>(Optimize)</b>Annotation adjustment of the primary key field in the generated interface classes(GeneratedValue -> GeneratedValue(strategy = GenerationType.IDENTITY))</li>
+      <li><b>(Bug Fix)</b>In kotlin projects, the generated entity class interfaces will appear in the ksp folder</li>
+      <li><b>(Bug Fix)</b>Possible errors when an option is cancelled in the middle</li>
+      <li><b>(Bug Fix)</b>When you select the save package path for the entity class interface, the entity class interfaces will be generated even if you deselect it</li>
     </ul>
     <ul>
-      <li>优化为生成的接口类插入导包代码块的逻辑</li>
+      <li><b>(新特性)</b>最低支持的版本调整为2020.3.4</li>
+      <li><b>(优化)</b>生成的接口类中，主键字段的注解调整(GeneratedValue -> GeneratedValue(strategy = GenerationType.IDENTITY))</li>
+      <li><b>(修复bug)</b>kotlin项目中，生成的实体类接口会出现在ksp文件夹里</li>
+      <li><b>(修复bug)</b>中途某个选项取消时，可能会有报错</li>
+      <li><b>(修复bug)</b>选择实体类接口的保存包路径时，即使取消选择，也会生成实体类接口</li>
     </ul>
-    <p>1.0.0</p>
+    <hr/>
+    <p><b>1.0.1(2022-10-20)</b></p>
+    <ul>
+      <li><b>Optimize</b>Optimize the logic of inserting package importing code blocks for the generated interface classes</li>
+    </ul>
+    <ul>
+      <li><b>优化</b>优化为生成的接口类插入导包代码块的逻辑</li>
+    </ul>
+    <hr/>
+    <p><b>1.0.0(2022-10-13)</b></p>
     <ul>
       <li>Plugin published</li>
     </ul>
