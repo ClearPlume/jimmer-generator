@@ -25,9 +25,17 @@
     <li>为Jimmer框架生成实体类接口，支持Java、Kotlin</li>
     <li>自动为每一个实体类接口生成一个父类接口，可以在父类接口中存放关联关系</li>
     <li>基于Database Tool插件开发，理论上支持大部分数据库，目前已验证PostgreSQL、MySQL</li>
+    </ul>
   ]]></description>
 
     <change-notes><![CDATA[
+    <p><b>2.0.0(2022-11-01)</b></p>
+    <ul>
+        <li><b>(Optimize)</b>Add GUI interface to optimize the use experience</li>
+    </ul>
+    <ul>
+        <li><b>(优化)</b>加入GUI界面，优化使用体验</li>
+    </ul>
     <p><b>1.1.1(2022-10-27)</b></p>
     <ul>
         <li><b>(Bug Fix)</b>JimmerGenerator on PersistentStateComponent, and may report an error if it runs directly after installation</li>

@@ -5,7 +5,7 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.ProjectManager
-import top.fallenangel.jimmergenerator.ResourceUtil
+import top.fallenangel.jimmergenerator.util.ResourceUtil
 import top.fallenangel.jimmergenerator.model.setting.SettingStorage
 
 @State(name = "JimmerGeneratorSetting", storages = [Storage("jimmer-generator-setting.xml")])

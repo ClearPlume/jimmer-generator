@@ -1,10 +1,11 @@
-package top.fallenangel.jimmergenerator
+package top.fallenangel.jimmergenerator.util
 
 import com.intellij.database.model.DasColumn
 import com.intellij.database.psi.DbTable
 import com.intellij.database.util.DasUtil
 import top.fallenangel.jimmergenerator.component.SettingStorageComponent
 import top.fallenangel.jimmergenerator.enums.Language
+import top.fallenangel.jimmergenerator.exception.UnreachableArm
 import top.fallenangel.jimmergenerator.model.Field
 import top.fallenangel.jimmergenerator.model.Table
 import java.io.BufferedReader
@@ -71,6 +72,7 @@ private fun DasColumn.captureType(language: Language): String {
             return when (language) {
                 Language.JAVA -> if (DasUtil.isPrimary(this) && typeMapping.javaPrimitives != null) typeMapping.javaPrimitives else typeMapping.java
                 Language.KOTLIN -> if (isNotNull) typeMapping.kotlin else "${typeMapping.kotlin}?"
+                Language.UNKNOWN -> throw UnreachableArm()
             }
         }
     }
@@ -78,6 +80,7 @@ private fun DasColumn.captureType(language: Language): String {
     return when (language) {
         Language.JAVA -> "java.lang.Object"
         Language.KOTLIN -> if (isNotNull) "kotlin.Any" else "kotlin.Any?"
+        Language.UNKNOWN -> throw UnreachableArm()
     }
 }
 
@@ -86,15 +89,15 @@ fun Table.captureImportList(): List<String> {
         // 实体类中用到的所有全限定类名
         addAll(
             fields.map { it.type }
-                .distinct()
-                .filter { it.contains('.') }
+                    .distinct()
+                    .filter { it.contains('.') }
         )
         // 实体类中用到的所有注解
         addAll(
             fields.map { it.annotations }
-                .flatten()
-                .distinct()
-                .filter { it.contains('.') }
+                    .flatten()
+                    .distinct()
+                    .filter { it.contains('.') }
         )
     }
     return classes.asSequence()

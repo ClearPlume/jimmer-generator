@@ -5,14 +5,14 @@ plugins {
 }
 
 group = "top.fallenangel"
-version = "1.1.1"
+version = "2.0.0"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.15")
+    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.16")
 }
 
 // Configure Gradle IntelliJ Plugin
