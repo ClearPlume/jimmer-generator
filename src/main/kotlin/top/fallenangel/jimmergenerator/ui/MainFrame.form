@@ -25,7 +25,7 @@
               <forms/>
             </constraints>
             <properties>
-              <text resource-bundle="ui" key="label_language_java"/>
+              <text resource-bundle="ui" key="radio_java"/>
             </properties>
           </component>
           <component id="8fe29" class="javax.swing.JRadioButton" binding="kotlinRadio">
@@ -34,7 +34,7 @@
               <forms/>
             </constraints>
             <properties>
-              <text resource-bundle="ui" key="label_language_kotlin"/>
+              <text resource-bundle="ui" key="radio_kotlin"/>
             </properties>
           </component>
         </children>

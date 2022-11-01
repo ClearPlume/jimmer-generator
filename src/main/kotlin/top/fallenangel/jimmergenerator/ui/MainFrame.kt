@@ -24,6 +24,7 @@ import java.awt.Component
 import java.awt.event.ItemEvent
 import java.io.InputStreamReader
 import java.io.StringWriter
+import java.util.*
 import java.util.function.Consumer
 import javax.swing.*
 import javax.swing.plaf.basic.BasicComboBoxRenderer
@@ -39,11 +40,19 @@ class MainFrame(private val dialog: DialogBuilder, private val project: Project,
     private lateinit var okButton: JButton
     private lateinit var cancelButton: JButton
 
+    private val messageBundle: ResourceBundle
+    private val uiBundle: ResourceBundle
+
+    // private var locale = Locale.SIMPLIFIED_CHINESE
+    private var locale = Locale.ENGLISH
     private var language = Language.UNKNOWN
     private var selectedModule = Constant.dummyModule
     private var selectedSourceRoot = Constant.dummyFile
 
     init {
+        messageBundle = ResourceBundle.getBundle("message", locale)
+        uiBundle = ResourceBundle.getBundle("ui", locale)
+
         dialog.setCenterPanel(panel)
         ButtonGroup().apply {
             add(javaRadio)
@@ -101,10 +110,10 @@ class MainFrame(private val dialog: DialogBuilder, private val project: Project,
         // 选择保存包事件
         choosePackageButton.addActionListener {
             if (selectedModule == Constant.dummyModule) {
-                Messages.showWarningDialog(project, "Must select a module first!", "Warning")
+                Messages.showWarningDialog(project, messageBundle.getString("module_not_select_warning"), uiBundle.getString("warning"))
                 return@addActionListener
             }
-            val chooser = PackageChooserDialog("Package Chooser", selectedModule)
+            val chooser = PackageChooserDialog(uiBundle.getString("dialog_title_package"), selectedModule)
             if (chooser.showAndGet()) {
                 packageText.text = chooser.selectedPackage.qualifiedName
             }
@@ -113,19 +122,19 @@ class MainFrame(private val dialog: DialogBuilder, private val project: Project,
         // 确定按钮事件
         okButton.addActionListener {
             if (language == Language.UNKNOWN) {
-                Messages.showWarningDialog(project, "Language must be selected!", "Warning")
+                Messages.showWarningDialog(project, messageBundle.getString("language_not_select_warning"), uiBundle.getString("warning"))
                 return@addActionListener
             }
             if (selectedModule == Constant.dummyModule) {
-                Messages.showWarningDialog(project, "Must select a module first!", "Warning")
+                Messages.showWarningDialog(project, messageBundle.getString("module_not_select_warning"), uiBundle.getString("warning"))
                 return@addActionListener
             }
             if (selectedSourceRoot == Constant.dummyFile) {
-                Messages.showWarningDialog(project, "A source root must be selected from the module <${selectedModule.name}>!", "Warning")
+                Messages.showWarningDialog(project, messageBundle.getString("source_root_not_select_warning"), uiBundle.getString("warning"))
                 return@addActionListener
             }
             generateCode()
-            Messages.showInfoMessage(project, "Entity class interface generated successfully!", "Tips")
+            Messages.showInfoMessage(project, messageBundle.getString("entities_generate_success_info"), uiBundle.getString("tips"))
             closeFrame()
         }
 
