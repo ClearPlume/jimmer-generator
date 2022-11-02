@@ -3,7 +3,6 @@ package top.fallenangel.jimmergenerator.ui
 import com.intellij.codeInsight.actions.ReformatCodeProcessor
 import com.intellij.database.psi.DbTable
 import com.intellij.ide.util.PackageChooserDialog
-import com.intellij.mock.MockVirtualFile
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
@@ -19,6 +18,7 @@ import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.model.Table
+import top.fallenangel.jimmergenerator.model.dummy.DummyVirtualFile
 import top.fallenangel.jimmergenerator.util.*
 import java.awt.Component
 import java.awt.event.ItemEvent
@@ -148,7 +148,7 @@ class MainFrame(private val dialog: DialogBuilder, private val project: Project,
 
     private fun generateCode() {
         val selectedPackage = packageText.text
-        val selectedPath = "${selectedModule.path()}/${selectedPackage.replace('.', '/')}"
+        val selectedPath = "${selectedSourceRoot.path}/${selectedPackage.replace('.', '/')}"
         val fileExt = language.fileExt
 
         // 保存选中的表
@@ -208,13 +208,6 @@ class MainFrame(private val dialog: DialogBuilder, private val project: Project,
         }
     }
 
-    private fun Module.path(): String {
-        return ModuleRootManager.getInstance(this)
-                .getSourceRoots(false)
-                .find { source -> source.name.matches(Regex("^kotlin$|^java$")) && !source.path.contains("ksp") }!!
-                .path
-    }
-
     private class ModuleRender : BasicComboBoxRenderer() {
         override fun getListCellRendererComponent(list: JList<*>?, value: Any, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
@@ -226,7 +219,7 @@ class MainFrame(private val dialog: DialogBuilder, private val project: Project,
     private class VirtualFileRender : BasicComboBoxRenderer() {
         override fun getListCellRendererComponent(list: JList<*>?, value: Any, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-            text = if (value is MockVirtualFile) {
+            text = if (value is DummyVirtualFile) {
                 value.name
             } else {
                 (value as VirtualFile).path
