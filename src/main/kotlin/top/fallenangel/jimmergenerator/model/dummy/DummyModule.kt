@@ -9,9 +9,9 @@ import java.nio.file.Path
 
 @Suppress("UnstableApiUsage", "OVERRIDE_DEPRECATION")
 class DummyModule(private val moduleName: String) : MockComponentManager(null, Constant.disposable), Module {
-    override fun getName(): String {
-        return moduleName
-    }
+    override fun getName() = moduleName
+
+    override fun toString() = "Module: $moduleName"
 
     override fun getModuleFile() = null
 
