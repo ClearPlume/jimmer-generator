@@ -26,9 +26,10 @@ object ResourceUtil {
 object NameUtil {
     fun sneak2camel(sneak: String): String {
         return sneak.lowercase()
-                .split("_")
+                .split(Regex("[^a-zA-Z]"))
+                .filter { it.isNotBlank() }
                 .map { it.capitalize() }
-                .reduce { curr, next -> "$curr$next" }
+                .joinToString("") { it }
     }
 }
 
