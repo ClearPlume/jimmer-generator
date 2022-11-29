@@ -1,7 +1,7 @@
 plugins {
+    id("org.jetbrains.intellij") version "1.10.0"
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.7.10"
-    id("org.jetbrains.intellij") version "1.9.0"
+    kotlin("jvm") version "1.7.10"
 }
 
 group = "top.fallenangel"
@@ -12,7 +12,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.16")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
+    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.19")
 }
 
 // Configure Gradle IntelliJ Plugin

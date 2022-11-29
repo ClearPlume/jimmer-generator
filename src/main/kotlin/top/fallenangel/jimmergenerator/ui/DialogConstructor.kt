@@ -33,12 +33,16 @@ class DialogConstructor(project: Project) : DialogWrapper(project) {
     override fun createCenterPanel() = panel
 
     override fun doOKAction() {
-        okEvent()
+        if (::okEvent.isInitialized) {
+            okEvent()
+        }
         super.doOKAction()
     }
 
     override fun doCancelAction() {
-        cancelEvent()
+        if (::cancelEvent.isInitialized) {
+            cancelEvent()
+        }
         super.doCancelAction()
     }
 }
