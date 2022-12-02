@@ -9,8 +9,8 @@ import top.fallenangel.jimmergenerator.model.dummy.DummyVirtualFile
 import java.util.*
 
 object Constant {
-    val uiBundle = ResourceBundle.getBundle("ui", Locale.CHINESE)
-    val messageBundle = ResourceBundle.getBundle("message", Locale.ENGLISH)
+    val uiBundle: ResourceBundle = ResourceBundle.getBundle("ui", Locale.CHINESE)
+    val messageBundle: ResourceBundle = ResourceBundle.getBundle("message", Locale.ENGLISH)
 
     val disposable: Disposable = DialogBuilder()
     val dummyModule: Module = DummyModule("----------")

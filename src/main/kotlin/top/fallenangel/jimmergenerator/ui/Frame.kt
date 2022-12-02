@@ -43,54 +43,56 @@ import java.io.StringWriter
 import javax.swing.tree.TreeCellRenderer
 
 class Frame(dialog: DialogConstructor, private val data: FrameData, private val project: Project, private val modules: List<Module>, private val tables: List<DbTable>) {
+    private val uiBundle = Constant.uiBundle
+    private val messageBundle = Constant.messageBundle
     private val tableRef = TableReference()
     private val root = CheckedTreeNode()
     private val panel: DialogPanel = centerPanel()
 
     init {
         dialog.apply {
-            title = Constant.uiBundle.getString("dialog_title")
+            title = uiBundle.getString("dialog_title")
             centerPanel(panel)
 
-            okText(Constant.uiBundle.getString("button_ok"))
+            okText(uiBundle.getString("button_ok"))
             ok {
                 panel.apply()
                 if (data.language == Language.UNKNOWN) {
-                    Messages.showWarningDialog(project, Constant.messageBundle.getString("language_not_select_warning"), Constant.uiBundle.getString("warning"))
+                    Messages.showWarningDialog(project, messageBundle.getString("language_not_select_warning"), uiBundle.getString("warning"))
                     return@ok false
                 }
                 if (data.module == Constant.dummyModule) {
-                    Messages.showWarningDialog(project, Constant.messageBundle.getString("module_not_select_warning"), Constant.uiBundle.getString("warning"))
+                    Messages.showWarningDialog(project, messageBundle.getString("module_not_select_warning"), uiBundle.getString("warning"))
                     return@ok false
                 }
                 if (data.sourceRoot == Constant.dummyFile) {
-                    Messages.showWarningDialog(project, Constant.messageBundle.getString("source_root_not_select_warning"), Constant.uiBundle.getString("warning"))
+                    Messages.showWarningDialog(project, messageBundle.getString("source_root_not_select_warning"), uiBundle.getString("warning"))
                     return@ok false
                 }
                 generateCode()
                 return@ok true
             }
 
-            cancelText(Constant.uiBundle.getString("button_cancel"))
+            cancelText(uiBundle.getString("button_cancel"))
 
             exhibit()
         }
     }
 
     private fun centerPanel() = panel {
-        titledRow(Constant.uiBundle.getString("label_split_general_setting")) {
+        titledRow(uiBundle.getString("label_split_general_setting")) {
             val sourceRoots = mutableListOf(Constant.dummyFile)
 
-            row(Constant.uiBundle.getString("label_language")) {
+            row(uiBundle.getString("label_language")) {
                 cell {
                     buttonGroup(data::language) {
-                        radioButton(Constant.uiBundle.getString("radio_java"), Language.JAVA)
-                        radioButton(Constant.uiBundle.getString("radio_kotlin"), Language.KOTLIN)
+                        radioButton(uiBundle.getString("radio_java"), Language.JAVA)
+                        radioButton(uiBundle.getString("radio_kotlin"), Language.KOTLIN)
                     }
                 }
             }
 
-            row(Constant.uiBundle.getString("label_module")) {
+            row(uiBundle.getString("label_module")) {
                 val renderer = SimpleListCellRenderer.create<Module?> { label, value, _ -> label.text = value?.name }
                 comboBox(CollectionComboBoxModel(modules), data::module, renderer)
                         .constraints(CCFlags.growX)
@@ -103,7 +105,7 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
                         }
             }
 
-            row(Constant.uiBundle.getString("label_module_source")) {
+            row(uiBundle.getString("label_module_source")) {
                 val renderer = SimpleListCellRenderer.create<VirtualFile> { label, value, _ ->
                     label.text = if (value is DummyVirtualFile) {
                         value.name
@@ -114,20 +116,20 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
                 comboBox(MutableCollectionComboBoxModel(sourceRoots), data::sourceRoot, renderer).constraints(CCFlags.growX)
             }
 
-            row(Constant.uiBundle.getString("label_package")) {
+            row(uiBundle.getString("label_package")) {
                 cell(isFullWidth = true) {
                     val packageText = textField(data::`package`, 50).constraints(CCFlags.growX).component
-                    button(Constant.uiBundle.getString("button_choose")) {
+                    button(uiBundle.getString("button_choose")) {
                         panel.apply()
                         if (data.module == Constant.dummyModule) {
-                            Messages.showWarningDialog(project, Constant.messageBundle.getString("module_not_select_warning"), Constant.uiBundle.getString("warning"))
+                            Messages.showWarningDialog(project, messageBundle.getString("module_not_select_warning"), uiBundle.getString("warning"))
                             return@button
                         }
                         if (data.sourceRoot == Constant.dummyFile) {
-                            Messages.showWarningDialog(project, Constant.messageBundle.getString("source_root_not_select_warning"), Constant.uiBundle.getString("warning"))
+                            Messages.showWarningDialog(project, messageBundle.getString("source_root_not_select_warning"), uiBundle.getString("warning"))
                             return@button
                         }
-                        val chooser = PackageChooserDialog(Constant.uiBundle.getString("dialog_title_package"), data.module)
+                        val chooser = PackageChooserDialog(uiBundle.getString("dialog_title_package"), data.module)
                         if (chooser.showAndGet()) {
                             packageText.text = chooser.selectedPackage.qualifiedName
                             data.`package` = chooser.selectedPackage.qualifiedName
@@ -137,7 +139,7 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
             }
         }
 
-        titledRow(Constant.uiBundle.getString("label_split_tables")) {
+        titledRow(uiBundle.getString("label_split_tables")) {
             row {
                 val columns = arrayOf(SelectedColumnInfo(tableRef, ""), TreeColumnInfo("Database Object"), PropertyColumnInfo("Entity Name"), TypeColumnInfo("Entity Type"))
                 tables.forEach {
@@ -235,7 +237,7 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
             writer.close()
             template.close()
         }
-        Messages.showInfoMessage(project, Constant.messageBundle.getString("entities_generate_success_info"), Constant.uiBundle.getString("tips"))
+        Messages.showInfoMessage(project, messageBundle.getString("entities_generate_success_info"), uiBundle.getString("tips"))
     }
 }
 
