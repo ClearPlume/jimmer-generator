@@ -141,7 +141,12 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
 
         titledRow(uiBundle.getString("label_split_tables")) {
             row {
-                val columns = arrayOf(SelectedColumnInfo(tableRef, ""), TreeColumnInfo("Database Object"), PropertyColumnInfo("Entity Name"), TypeColumnInfo("Entity Type"))
+                val columns = arrayOf(
+                    SelectedColumnInfo(tableRef, ""),
+                    TreeColumnInfo(uiBundle.getString("column_obj_name")),
+                    PropertyColumnInfo(uiBundle.getString("column_property_name")),
+                    TypeColumnInfo(uiBundle.getString("column_property_type"))
+                )
                 tables.forEach {
                     val tableColumns = mutableListOf<MappingData>()
                     val tableNode = MappingData(true, it.name, NameUtil.sneak2camel(it.name), "String", tableColumns)
