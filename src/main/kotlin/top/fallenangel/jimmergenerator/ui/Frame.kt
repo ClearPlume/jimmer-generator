@@ -42,17 +42,18 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
                 panel.apply()
                 if (data.language == Language.UNKNOWN) {
                     Messages.showWarningDialog(project, Constant.messageBundle.getString("language_not_select_warning"), Constant.uiBundle.getString("warning"))
-                    return@ok
+                    return@ok false
                 }
                 if (data.module == Constant.dummyModule) {
                     Messages.showWarningDialog(project, Constant.messageBundle.getString("module_not_select_warning"), Constant.uiBundle.getString("warning"))
-                    return@ok
+                    return@ok false
                 }
                 if (data.sourceRoot == Constant.dummyFile) {
                     Messages.showWarningDialog(project, Constant.messageBundle.getString("source_root_not_select_warning"), Constant.uiBundle.getString("warning"))
-                    return@ok
+                    return@ok false
                 }
                 generateCode()
+                return@ok true
             }
 
             cancelText(Constant.uiBundle.getString("button_cancel"))

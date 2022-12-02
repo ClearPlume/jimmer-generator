@@ -4,10 +4,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.DialogWrapper
 
+@Suppress("unused")
 class DialogConstructor(project: Project) : DialogWrapper(project) {
     private lateinit var panel: DialogPanel
-    private lateinit var okEvent: () -> Unit
-    private lateinit var cancelEvent: () -> Unit
+    private lateinit var okEvent: () -> Boolean
+    private lateinit var cancelEvent: () -> Boolean
 
     fun centerPanel(panel: DialogPanel) {
         this.panel = panel
@@ -15,13 +16,13 @@ class DialogConstructor(project: Project) : DialogWrapper(project) {
 
     fun okText(text: String) = setOKButtonText(text)
 
-    fun ok(event: () -> Unit) {
+    fun ok(event: () -> Boolean) {
         okEvent = event
     }
 
     fun cancelText(text: String) = setCancelButtonText(text)
 
-    fun cancel(event: () -> Unit) {
+    fun cancel(event: () -> Boolean) {
         cancelEvent = event
     }
 
@@ -34,15 +35,21 @@ class DialogConstructor(project: Project) : DialogWrapper(project) {
 
     override fun doOKAction() {
         if (::okEvent.isInitialized) {
-            okEvent()
+            if (okEvent()) {
+                super.doOKAction()
+            }
+        } else {
+            super.doOKAction()
         }
-        super.doOKAction()
     }
 
     override fun doCancelAction() {
         if (::cancelEvent.isInitialized) {
-            cancelEvent()
+            if (cancelEvent()) {
+                super.doCancelAction()
+            }
+        } else {
+            super.doCancelAction()
         }
-        super.doCancelAction()
     }
 }
