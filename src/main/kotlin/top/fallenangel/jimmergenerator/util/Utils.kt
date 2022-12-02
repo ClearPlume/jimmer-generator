@@ -26,7 +26,7 @@ object ResourceUtil {
 object NameUtil {
     fun sneak2camel(sneak: String): String {
         return sneak.lowercase()
-                .split(Regex("[^a-zA-Z]"))
+                .split(Regex("[^a-zA-Z\\d]"))
                 .filter { it.isNotBlank() }
                 .map { it.capitalize() }
                 .joinToString("") { it }
@@ -60,7 +60,7 @@ private fun String.capitalize(): String {
     return chars.concatToString()
 }
 
-private fun String.uncapitalize(): String {
+fun String.uncapitalize(): String {
     val chars = toCharArray()
     chars[0] = chars[0].lowercaseChar()
     return chars.concatToString()
