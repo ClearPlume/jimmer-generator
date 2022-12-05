@@ -6,7 +6,6 @@ import top.fallenangel.jimmergenerator.ui.table.MappingData
 import top.fallenangel.jimmergenerator.ui.table.TableReference
 import javax.swing.DefaultCellEditor
 import javax.swing.JTable
-import javax.swing.SwingUtilities
 import javax.swing.table.TableCellRenderer
 import javax.swing.tree.TreePath
 
@@ -14,7 +13,7 @@ class SelectedColumnInfo(private val tableRef: TableReference, name: String) : C
     override fun setValue(item: MappingData, value: Boolean) {
         item.selected = value
         item.children.forEach { it.selected = value }
-        SwingUtilities.invokeLater { tableRef.table.tableModel.valueForPathChanged(TreePath(item.path), value) }
+        tableRef.table.tableModel.valueForPathChanged(TreePath(item.path), value)
     }
 
     override fun valueOf(item: MappingData): Boolean {
