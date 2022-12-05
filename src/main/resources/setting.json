@@ -13,7 +13,7 @@
       "kotlin": "Short"
     },
     {
-      "column": "^int(\\(\\d+\\))?$|^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$",
+      "column": "^int(\\(\\d+\\))?$|^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$|number",
       "java": "Integer",
       "javaPrimitives": "int",
       "kotlin": "Int"
@@ -37,7 +37,7 @@
       "kotlin": "Long"
     },
     {
-      "column": "^name(\\(\\d+\\))?$|^text$|^n?varchar(\\(\\d+\\))?$|^(n|bp)?char(\\(\\d+\\))?$|^json$|^jsonb$|^clob$",
+      "column": "^name(\\(\\d+\\))?$|^text$|^n?varchar2?(\\(\\d+\\))?$|^(n|bp)?char(\\(\\d+\\))?$|^json$|^jsonb$|^clob$",
       "java": "String",
       "kotlin": "String"
     },
