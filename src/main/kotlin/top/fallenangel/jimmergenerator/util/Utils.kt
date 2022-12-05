@@ -54,12 +54,18 @@ fun DbTable.fields(language: Language): List<Field> {
             .toList()
 }
 
+/**
+ * 首字母大写
+ */
 private fun String.capitalize(): String {
     val chars = toCharArray()
     chars[0] = chars[0].uppercaseChar()
     return chars.concatToString()
 }
 
+/**
+ * 首字母小写
+ */
 fun String.uncapitalize(): String {
     val chars = toCharArray()
     chars[0] = chars[0].lowercaseChar()

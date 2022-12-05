@@ -93,7 +93,7 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
             }
 
             row(uiBundle.getString("label_module")) {
-                val renderer = SimpleListCellRenderer.create<Module?> { label, value, _ -> label.text = value?.name }
+                val renderer = SimpleListCellRenderer.create<Module> { label, value, _ -> label.text = value.name }
                 comboBox(CollectionComboBoxModel(modules), data::module, renderer)
                         .constraints(CCFlags.growX)
                         .component.addItemListener {
