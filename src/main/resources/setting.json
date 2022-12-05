@@ -76,5 +76,12 @@
       "java": "java.math.BigDecimal",
       "kotlin": "java.math.BigDecimal"
     }
+  ],
+  "tableDefaultAnnotations": [
+    {
+      "name": "Entity",
+      "package": "org.babyfish.jimmer.sql",
+      "parameters": []
+    }
   ]
 }

@@ -2,23 +2,46 @@ package top.fallenangel.jimmergenerator
 
 import com.intellij.database.psi.DbElement
 import com.intellij.database.psi.DbTable
+import com.intellij.database.util.DasUtil
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.psi.PsiElement
+import top.fallenangel.jimmergenerator.component.SettingStorageComponent
+import top.fallenangel.jimmergenerator.enums.Language
+import top.fallenangel.jimmergenerator.model.Field
+import top.fallenangel.jimmergenerator.model.Table
 import top.fallenangel.jimmergenerator.ui.DialogConstructor
 import top.fallenangel.jimmergenerator.ui.Frame
-import top.fallenangel.jimmergenerator.ui.FrameData
 import top.fallenangel.jimmergenerator.util.Constant
+import top.fallenangel.jimmergenerator.util.captureAnnotations
+import top.fallenangel.jimmergenerator.util.captureType
 
 class MainEntry : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val modules = ModuleManager.getInstance(project).modules.toMutableList().apply { add(0, Constant.dummyModule) }
-        val tables = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)?.map { it as DbTable } ?: return
+        val dbTables = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)?.map { it as DbTable } ?: return
 
-        Frame(DialogConstructor(project), FrameData(), project, modules, tables)
+        val tables = dbTables.map {
+            val fields = DasUtil.getColumns(it)
+                    .toList()
+                    .map { column ->
+                        Field(
+                            column.name,
+                            column.captureType(Language.JAVA),
+                            column.captureAnnotations(Language.JAVA),
+                            column.comment,
+                            !column.isNotNull
+                        )
+                    }
+            Table(
+                it.name, fields, it.comment,
+                SettingStorageComponent.storage.state.tableDefaultAnnotations
+            )
+        }
+        Frame(DialogConstructor(project), project, modules, tables)
     }
 
     /**

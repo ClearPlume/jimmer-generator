@@ -1,8 +1,6 @@
 package top.fallenangel.jimmergenerator.ui
 
 import com.intellij.codeInsight.actions.ReformatCodeProcessor
-import com.intellij.database.psi.DbTable
-import com.intellij.database.util.DasUtil
 import com.intellij.ide.util.PackageChooserDialog
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.Module
@@ -14,17 +12,16 @@ import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
-import com.intellij.ui.CheckedTreeNode
-import com.intellij.ui.CollectionComboBoxModel
-import com.intellij.ui.MutableCollectionComboBoxModel
-import com.intellij.ui.SimpleListCellRenderer
+import com.intellij.ui.*
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.dualView.TreeTableView
 import com.intellij.ui.layout.CCFlags
+import com.intellij.ui.layout.GrowPolicy
 import com.intellij.ui.layout.buttonGroup
 import com.intellij.ui.layout.panel
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModelOnColumns
 import com.intellij.ui.treeStructure.treetable.TreeColumnInfo
+import com.intellij.util.ui.UIUtil
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import top.fallenangel.jimmergenerator.enums.Language
@@ -36,13 +33,14 @@ import top.fallenangel.jimmergenerator.ui.table.column.PropertyColumnInfo
 import top.fallenangel.jimmergenerator.ui.table.column.SelectedColumnInfo
 import top.fallenangel.jimmergenerator.ui.table.column.TypeColumnInfo
 import top.fallenangel.jimmergenerator.util.*
-import java.awt.Color
 import java.awt.event.ItemEvent
 import java.io.InputStreamReader
 import java.io.StringWriter
 import javax.swing.tree.TreeCellRenderer
+import javax.swing.tree.TreePath
 
-class Frame(dialog: DialogConstructor, private val data: FrameData, private val project: Project, private val modules: List<Module>, private val tables: List<DbTable>) {
+class Frame(dialog: DialogConstructor, private val project: Project, private val modules: List<Module>, private val tables: List<Table>) {
+    private val data = FrameData()
     private val uiBundle = Constant.uiBundle
     private val messageBundle = Constant.messageBundle
     private val tableRef = TableReference()
@@ -57,8 +55,13 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
             okText(uiBundle.getString("button_ok"))
             ok {
                 panel.apply()
-                if (data.language == Language.UNKNOWN) {
-                    Messages.showWarningDialog(project, messageBundle.getString("language_not_select_warning"), uiBundle.getString("warning"))
+                val languageConfirmed = Messages.showYesNoDialog(
+                    project,
+                    messageBundle.getString("confirm_current_language") + NameUtil.sneak2camel(data.language.name),
+                    uiBundle.getString("tips"),
+                    UIUtil.getQuestionIcon()
+                )
+                if (languageConfirmed == Messages.NO) {
                     return@ok false
                 }
                 if (data.module == Constant.dummyModule) {
@@ -72,15 +75,13 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
                 generateCode()
                 return@ok true
             }
-
             cancelText(uiBundle.getString("button_cancel"))
-
             exhibit()
         }
     }
 
     private fun centerPanel() = panel {
-        titledRow(uiBundle.getString("label_split_general_setting")) {
+        titledRow(uiBundle.getString("split_basic_setting")) {
             val sourceRoots = mutableListOf(Constant.dummyFile)
 
             row(uiBundle.getString("label_language")) {
@@ -139,7 +140,48 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
             }
         }
 
-        titledRow(uiBundle.getString("label_split_tables")) {
+        titledRow(uiBundle.getString("split_naming_setting")) {
+            row {
+                label(uiBundle.getString("label_remove_table_prefix"))
+                        .comment(uiBundle.getString("comment_split_naming"))
+                textField(data::tablePrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
+
+                label(uiBundle.getString("label_remove_table_suffix")).withLargeLeftGap()
+                textField(data::tableSuffix).growPolicy(GrowPolicy.MEDIUM_TEXT)
+            }
+            row {
+                label(uiBundle.getString("label_add_entity_prefix"))
+                textField(data::entityPrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
+
+                label(uiBundle.getString("label_add_entity_suffix")).withLargeLeftGap()
+                textField(data::entitySuffix).growPolicy(GrowPolicy.MEDIUM_TEXT)
+            }
+            row {
+                label(uiBundle.getString("label_remove_field_prefix"))
+                        .comment(uiBundle.getString("comment_split_naming"))
+                textField(data::fieldPrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
+
+                label(uiBundle.getString("label_remove_field_suffix")).withLargeLeftGap()
+                textField(data::fieldSuffix).growPolicy(GrowPolicy.MEDIUM_TEXT)
+            }
+            row {
+                button(uiBundle.getString("button_apply_naming_setting")) {
+                    panel.apply()
+                    val tables = root.children().toList().map { it as MappingData }
+                    tables.forEach { table ->
+                        val entityName = table.obj.field2property(data.tablePrefix, data.tableSuffix)
+                        table.property = "${data.entityPrefix}$entityName${data.entitySuffix}"
+                        table.type = "${data.entityPrefix}$entityName${data.entitySuffix}"
+                        table.children.forEach {
+                            it.property = it.obj.field2property(data.fieldPrefix, data.fieldSuffix, true)
+                        }
+                    }
+                    tableRef.table.tableModel.valueForPathChanged(TreePath(root.path), null)
+                }.constraints(CCFlags.growX)
+            }
+        }
+
+        titledRow(uiBundle.getString("split_table_mapping")) {
             row {
                 val columns = arrayOf(
                     SelectedColumnInfo(tableRef, ""),
@@ -149,9 +191,19 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
                 )
                 tables.forEach {
                     val tableColumns = mutableListOf<MappingData>()
-                    val tableNode = MappingData(true, it.name, NameUtil.sneak2camel(it.name), "String", tableColumns)
-                    DasUtil.getColumns(it).forEach { column ->
-                        val tableColumn = MappingData(true, column.name, NameUtil.sneak2camel(column.name).uncapitalize(), "String", mutableListOf())
+                    val tableNode = MappingData(
+                        true, it.name,
+                        it.name.field2property(data.tablePrefix, data.tableSuffix),
+                        it.name.field2property(data.tablePrefix, data.tableSuffix),
+                        tableColumns
+                    )
+                    it.fields.forEach { field ->
+                        val tableColumn = MappingData(
+                            true, field.name,
+                            field.name.field2property(data.fieldPrefix, data.fieldSuffix, true),
+                            field.type.name,
+                            mutableListOf()
+                        )
                         tableColumns.add(tableColumn)
                         tableNode.add(tableColumn)
                     }
@@ -164,7 +216,7 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
                         TreeCellRenderer { _, value, selected, _, _, _, _ ->
                             return@TreeCellRenderer if (value is MappingData) {
                                 JBLabel(value.obj).apply {
-                                    foreground = if (selected) Color.WHITE else Color.BLACK
+                                    foreground = if (selected) JBColor.WHITE else JBColor.BLACK
                                 }
                             } else {
                                 JBLabel("")
@@ -181,6 +233,17 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
         }
     }
 
+    private fun String.field2property(prefix: String, suffix: String, uncapitalize: Boolean = false): String {
+        var property = this.lowercase()
+        property = property.replaceFirst(Regex("^$prefix", RegexOption.IGNORE_CASE), "")
+        property = property.replaceFirst(Regex("$suffix$", RegexOption.IGNORE_CASE), "")
+        return if (uncapitalize) {
+            NameUtil.sneak2camel(property).uncapitalize()
+        } else {
+            NameUtil.sneak2camel(property)
+        }
+    }
+
     private fun generateCode() {
         val selectedPackage = data.`package`
         val selectedPath = "${data.sourceRoot.path}/${selectedPackage.replace('.', '/')}"
@@ -192,7 +255,7 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
         tables.forEach {
             val writer = StringWriter()
             val tableEntityName = NameUtil.sneak2camel(it.name)
-            val table = Table(tableEntityName, it.fields(language), it.comment)
+            val table = Table(tableEntityName, emptyList(), it.remark, emptyList())
             val velocityContext = VelocityContext().apply {
                 put("package", selectedPackage)
                 put("importList", table.captureImportList())
@@ -247,8 +310,14 @@ class Frame(dialog: DialogConstructor, private val data: FrameData, private val 
 }
 
 data class FrameData(
-    var language: Language = Language.UNKNOWN,
+    var language: Language = Language.JAVA,
     var module: Module = Constant.dummyModule,
     var sourceRoot: VirtualFile = Constant.dummyFile,
-    var `package`: String = ""
+    var `package`: String = "",
+    var tablePrefix: String = "",
+    var tableSuffix: String = "",
+    var fieldPrefix: String = "",
+    var fieldSuffix: String = "",
+    var entityPrefix: String = "",
+    var entitySuffix: String = ""
 )
