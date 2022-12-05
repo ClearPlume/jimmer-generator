@@ -21,7 +21,7 @@ class TypeColumnInfo(name: String) : ColumnInfo<MappingData, String>(name) {
         }
     }
 
-    override fun isCellEditable(item: MappingData) = true
+    override fun isCellEditable(item: MappingData) = item.children.isEmpty()
 
     override fun getEditor(item: MappingData): TableCellEditor {
         val editor = DefaultCellEditor(ComboBox(arrayOf("String", "Int", "Boolean")))
