@@ -15,7 +15,7 @@ import $import;
 #end
 @Entity
 public interface $table.name extends ${table.name}Base {
-#foreach($field in $table.fields)
+#foreach($field in $table.children)
     #if($velocityCount != 1)
 
     #end

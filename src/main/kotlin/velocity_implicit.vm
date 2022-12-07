@@ -1,4 +1,4 @@
 #* @implicitly included *#
 #* @vtlvariable name="package" type="java.lang.String" *#
 #* @vtlvariable name="importList" type="java.util.List<java.lang.String>" *#
-#* @vtlvariable name="table" type="top.fallenangel.jimmergenerator.model.Table" *#
+#* @vtlvariable name="table" type="top.fallenangel.jimmergenerator.model.DbObj" *#

@@ -10,38 +10,44 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.psi.PsiElement
 import top.fallenangel.jimmergenerator.component.SettingStorageComponent
 import top.fallenangel.jimmergenerator.enums.Language
-import top.fallenangel.jimmergenerator.model.Field
-import top.fallenangel.jimmergenerator.model.Table
-import top.fallenangel.jimmergenerator.ui.DialogConstructor
+import top.fallenangel.jimmergenerator.model.DBType
+import top.fallenangel.jimmergenerator.model.DbObj
+import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.Frame
 import top.fallenangel.jimmergenerator.util.Constant
 import top.fallenangel.jimmergenerator.util.captureAnnotations
 import top.fallenangel.jimmergenerator.util.captureType
+import top.fallenangel.jimmergenerator.util.field2property
 
 class MainEntry : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val modules = ModuleManager.getInstance(project).modules.toMutableList().apply { add(0, Constant.dummyModule) }
         val dbTables = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)?.map { it as DbTable } ?: return
+        val dbType = DBType.valueOf(dbTables[0].dataSource.dbms)
 
         val tables = dbTables.map {
-            val fields = DasUtil.getColumns(it)
-                    .toList()
-                    .map { column ->
-                        Field(
-                            column.name,
-                            column.captureType(Language.JAVA),
-                            column.captureAnnotations(Language.JAVA),
-                            column.comment,
-                            !column.isNotNull
-                        )
-                    }
-            Table(
-                it.name, fields, it.comment,
-                SettingStorageComponent.storage.state.tableDefaultAnnotations
-            )
+            DbObj(
+                null, true, it.name,
+                it.name.field2property(),
+                Class(it.name.field2property()),
+                SettingStorageComponent.storage.state.tableDefaultAnnotations.toMutableList(),
+                it.comment
+            ).also { table ->
+                DasUtil.getColumns(it)
+                        .toList()
+                        .map { column ->
+                            DbObj(
+                                column, true, column.name,
+                                column.name.field2property(uncapitalize = true),
+                                column.captureType(Language.JAVA),
+                                column.captureAnnotations(Language.JAVA),
+                                column.comment
+                            ).apply { table.add(this) }
+                        }
+            }
         }
-        Frame(DialogConstructor(project), project, modules, tables)
+        Frame(project, modules, tables, dbType)
     }
 
     /**

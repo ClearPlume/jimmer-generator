@@ -2,7 +2,6 @@ package top.fallenangel.jimmergenerator.model.type
 
 data class Class(
     override val name: String,
-    override val `package`: String,
-    // For KT: String/String? Int/Int?
-    val nullableMarker: Boolean = false
+    override val `package`: String = "",
+    val nullable: Boolean = false
 ) : Type

@@ -22,33 +22,40 @@ import com.intellij.ui.layout.panel
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModelOnColumns
 import com.intellij.ui.treeStructure.treetable.TreeColumnInfo
 import com.intellij.util.ui.UIUtil
+import icons.DatabaseIcons
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import top.fallenangel.jimmergenerator.enums.Language
-import top.fallenangel.jimmergenerator.model.Table
+import top.fallenangel.jimmergenerator.model.DBType
+import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.dummy.DummyVirtualFile
-import top.fallenangel.jimmergenerator.ui.table.MappingData
+import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.table.TableReference
 import top.fallenangel.jimmergenerator.ui.table.column.PropertyColumnInfo
 import top.fallenangel.jimmergenerator.ui.table.column.SelectedColumnInfo
 import top.fallenangel.jimmergenerator.ui.table.column.TypeColumnInfo
-import top.fallenangel.jimmergenerator.util.*
+import top.fallenangel.jimmergenerator.util.Constant
+import top.fallenangel.jimmergenerator.util.NameUtil
+import top.fallenangel.jimmergenerator.util.ResourceUtil
+import top.fallenangel.jimmergenerator.util.field2property
 import java.awt.event.ItemEvent
 import java.io.InputStreamReader
 import java.io.StringWriter
+import javax.swing.SwingConstants
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreePath
 
-class Frame(dialog: DialogConstructor, private val project: Project, private val modules: List<Module>, private val tables: List<Table>) {
+class Frame(private val project: Project, private val modules: List<Module>, private val tables: List<DbObj>, dbType: DBType) {
     private val data = FrameData()
     private val uiBundle = Constant.uiBundle
     private val messageBundle = Constant.messageBundle
+
     private val tableRef = TableReference()
     private val root = CheckedTreeNode()
     private val panel: DialogPanel = centerPanel()
 
     init {
-        dialog.apply {
+        DialogConstructor(project).apply {
             title = uiBundle.getString("dialog_title")
             centerPanel(panel)
 
@@ -167,13 +174,13 @@ class Frame(dialog: DialogConstructor, private val project: Project, private val
             row {
                 button(uiBundle.getString("button_apply_naming_setting")) {
                     panel.apply()
-                    val tables = root.children().toList().map { it as MappingData }
+                    val tables = root.children().toList().map { it as DbObj }
                     tables.forEach { table ->
-                        val entityName = table.obj.field2property(data.tablePrefix, data.tableSuffix)
+                        val entityName = table.name.field2property(data.tablePrefix, data.tableSuffix)
                         table.property = "${data.entityPrefix}$entityName${data.entitySuffix}"
-                        table.type = "${data.entityPrefix}$entityName${data.entitySuffix}"
+                        table.type = Class("${data.entityPrefix}$entityName${data.entitySuffix}")
                         table.children.forEach {
-                            it.property = it.obj.field2property(data.fieldPrefix, data.fieldSuffix, true)
+                            it.property = it.name.field2property(data.fieldPrefix, data.fieldSuffix, true)
                         }
                     }
                     tableRef.table.tableModel.valueForPathChanged(TreePath(root.path), null)
@@ -189,37 +196,19 @@ class Frame(dialog: DialogConstructor, private val project: Project, private val
                     PropertyColumnInfo(uiBundle.getString("column_property_name")),
                     TypeColumnInfo(uiBundle.getString("column_property_type"))
                 )
-                tables.forEach {
-                    val tableColumns = mutableListOf<MappingData>()
-                    val tableNode = MappingData(
-                        true, it.name,
-                        it.name.field2property(data.tablePrefix, data.tableSuffix),
-                        it.name.field2property(data.tablePrefix, data.tableSuffix),
-                        tableColumns
-                    )
-                    it.fields.forEach { field ->
-                        val tableColumn = MappingData(
-                            true, field.name,
-                            field.name.field2property(data.fieldPrefix, data.fieldSuffix, true),
-                            field.type.name,
-                            mutableListOf()
-                        )
-                        tableColumns.add(tableColumn)
-                        tableNode.add(tableColumn)
-                    }
-                    root.add(tableNode)
-                }
+                tables.forEach { root.add(it) }
                 val tableModel = ListTreeTableModelOnColumns(root, columns)
                 tableRef.table = TreeTableView(tableModel).apply {
                     rowHeight = 26
                     setTreeCellRenderer(
                         TreeCellRenderer { _, value, selected, _, _, _, _ ->
-                            return@TreeCellRenderer if (value is MappingData) {
-                                JBLabel(value.obj).apply {
-                                    foreground = if (selected) JBColor.WHITE else JBColor.BLACK
-                                }
-                            } else {
-                                JBLabel("")
+                            if (value !is DbObj) return@TreeCellRenderer JBLabel("")
+                            return@TreeCellRenderer JBLabel(
+                                value.name,
+                                if (value.isTable) DatabaseIcons.Table else DatabaseIcons.Col,
+                                SwingConstants.LEADING
+                            ).apply {
+                                foreground = if (selected) JBColor.WHITE else JBColor.BLACK
                             }
                         }
                     )
@@ -230,17 +219,6 @@ class Frame(dialog: DialogConstructor, private val project: Project, private val
                 tableRef.table.minimumSize = tableSize
                 scrollPane(tableRef.table).component.minimumSize = tableSize
             }
-        }
-    }
-
-    private fun String.field2property(prefix: String, suffix: String, uncapitalize: Boolean = false): String {
-        var property = this.lowercase()
-        property = property.replaceFirst(Regex("^$prefix", RegexOption.IGNORE_CASE), "")
-        property = property.replaceFirst(Regex("$suffix$", RegexOption.IGNORE_CASE), "")
-        return if (uncapitalize) {
-            NameUtil.sneak2camel(property).uncapitalize()
-        } else {
-            NameUtil.sneak2camel(property)
         }
     }
 
@@ -255,11 +233,11 @@ class Frame(dialog: DialogConstructor, private val project: Project, private val
         tables.forEach {
             val writer = StringWriter()
             val tableEntityName = NameUtil.sneak2camel(it.name)
-            val table = Table(tableEntityName, emptyList(), it.remark, emptyList())
+            val table = DbObj(null, true, tableEntityName, "", Class(""), mutableListOf(), it.remark)
             val velocityContext = VelocityContext().apply {
                 put("package", selectedPackage)
-                put("importList", table.captureImportList())
-                put("table", table.removeClassPackage())
+                put("importList", emptyList<String>())
+                put("table", table)
             }
 
             val template = InputStreamReader(ResourceUtil.getResourceAsStream("/templates/$fileExt.vm"))

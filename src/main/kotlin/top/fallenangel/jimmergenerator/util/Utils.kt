@@ -1,12 +1,9 @@
 package top.fallenangel.jimmergenerator.util
 
 import com.intellij.database.model.DasColumn
-import com.intellij.database.psi.DbTable
 import com.intellij.database.util.DasUtil
 import top.fallenangel.jimmergenerator.component.SettingStorageComponent
 import top.fallenangel.jimmergenerator.enums.Language
-import top.fallenangel.jimmergenerator.model.Field
-import top.fallenangel.jimmergenerator.model.Table
 import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.model.type.Parameter
@@ -33,27 +30,6 @@ object NameUtil {
                 .map { it.capitalize() }
                 .joinToString("") { it }
     }
-}
-
-fun DbTable.fields(language: Language): List<Field> {
-    return DasUtil.getColumns(this)
-            .map {
-                // 获取列基本信息
-                val primary = DasUtil.isPrimary(it)
-                val nullable = !it.isNotNull
-
-                // 提取列注解
-                val annotations = mutableListOf<String>()
-                if (primary) {
-                    annotations.add("org.babyfish.jimmer.sql.Id")
-                    annotations.add("org.babyfish.jimmer.sql.GeneratedValue(strategy = GenerationType.IDENTITY)")
-                }
-                if (language == Language.JAVA && nullable) {
-                    annotations.add("javax.validation.constraints.Null")
-                }
-                Field(NameUtil.sneak2camel(it.name).uncapitalize(), it.captureType(language), mutableListOf(), it.comment, false)
-            }
-            .toList()
 }
 
 /**
@@ -86,13 +62,13 @@ fun DasColumn.captureType(language: Language): Class {
             return when (language) {
                 Language.JAVA -> {
                     if (DasUtil.isPrimary(this) && typeMapping.javaPrimitives != null) {
-                        Class(typeMapping.javaPrimitives, "")
+                        Class(typeMapping.javaPrimitives, nullable = !isNotNull)
                     } else {
                         val lastDotIndex = typeMapping.java.lastIndexOf('.')
                         if (lastDotIndex != -1) {
-                            Class(typeMapping.java.substring(lastDotIndex + 1), typeMapping.java.take(lastDotIndex))
+                            Class(typeMapping.java.substring(lastDotIndex + 1), typeMapping.java.take(lastDotIndex), !isNotNull)
                         } else {
-                            Class(typeMapping.java, "")
+                            Class(typeMapping.java, nullable = !isNotNull)
                         }
                     }
                 }
@@ -102,7 +78,7 @@ fun DasColumn.captureType(language: Language): Class {
                     if (lastDotIndex != -1) {
                         Class(typeMapping.kotlin.substring(lastDotIndex + 1), typeMapping.kotlin.take(lastDotIndex), !isNotNull)
                     } else {
-                        Class(typeMapping.kotlin, "", !isNotNull)
+                        Class(typeMapping.kotlin, nullable = !isNotNull)
                     }
                 }
             }
@@ -110,8 +86,8 @@ fun DasColumn.captureType(language: Language): Class {
     }
 
     return when (language) {
-        Language.JAVA -> Class("Object", "")
-        Language.KOTLIN -> Class("Any", "", true)
+        Language.JAVA -> Class("Object", nullable = true)
+        Language.KOTLIN -> Class("Any", nullable = true)
     }
 }
 
@@ -138,45 +114,20 @@ fun DasColumn.captureAnnotations(language: Language): MutableList<Annotation> {
     return annotations
 }
 
-fun Table.captureImportList(): List<String> {
-    val classes = mutableListOf("org.babyfish.jimmer.sql.Entity").apply {
-        // 实体类中用到的所有全限定类名
-        addAll(
-            fields.map { "" }
-        )
-        // 实体类中用到的所有注解
-        addAll(
-            fields.map { "" }
-        )
+/**
+ * 去除列名前后缀
+ *
+ * @param prefix 前缀
+ * @param suffix 后缀
+ * @param uncapitalize 是否对结果进行首字母小写操作
+ */
+fun String.field2property(prefix: String = "", suffix: String = "", uncapitalize: Boolean = false): String {
+    var property = this.lowercase()
+    property = property.replaceFirst(Regex("^$prefix", RegexOption.IGNORE_CASE), "")
+    property = property.replaceFirst(Regex("$suffix$", RegexOption.IGNORE_CASE), "")
+    return if (uncapitalize) {
+        NameUtil.sneak2camel(property).uncapitalize()
+    } else {
+        NameUtil.sneak2camel(property)
     }
-    return classes.asSequence()
-            .map {
-                // kotlin中的可空类型是以“?”结尾，需要去除
-                if (it.endsWith('?')) {
-                    return@map it.take(it.length - 1)
-                }
-                it
-            }
-            .map {
-                val (clazz) = it.split("(")
-                val lastDotIndex = clazz.lastIndexOf('.')
-                clazz.substring(0, lastDotIndex) to clazz.substring(lastDotIndex + 1)
-            }
-            .groupBy { it.first }
-            .map {
-                if (it.value.distinct().size == 1) {
-                    "${it.key}.${it.value[0].second}"
-                } else {
-                    "${it.key}.*"
-                }
-            }
-            .distinct()
-}
-
-fun Table.removeClassPackage(): Table {
-    for (field in fields) {
-        field.annotations.forEachIndexed { index, annotation ->
-        }
-    }
-    return this
 }

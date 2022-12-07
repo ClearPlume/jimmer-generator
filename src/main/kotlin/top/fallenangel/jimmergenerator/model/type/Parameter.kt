@@ -4,4 +4,7 @@ data class Parameter(
     val name: String,
     val value: Any,
     val type: Class
-)
+) {
+    val anonymity: Boolean
+        get() = name.isEmpty()
+}
