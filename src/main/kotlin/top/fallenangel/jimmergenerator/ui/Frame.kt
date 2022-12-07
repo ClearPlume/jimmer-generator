@@ -22,7 +22,6 @@ import com.intellij.ui.layout.panel
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModelOnColumns
 import com.intellij.ui.treeStructure.treetable.TreeColumnInfo
 import com.intellij.util.ui.UIUtil
-import icons.DatabaseIcons
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import top.fallenangel.jimmergenerator.enums.Language
@@ -205,11 +204,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     setTreeCellRenderer(
                         TreeCellRenderer { _, value, selected, _, _, _, _ ->
                             if (value !is DbObj) return@TreeCellRenderer JBLabel("")
-                            return@TreeCellRenderer JBLabel(
-                                value.name,
-                                if (value.isTable) DatabaseIcons.Table else DatabaseIcons.Col,
-                                SwingConstants.LEADING
-                            ).apply {
+                            return@TreeCellRenderer JBLabel(value.name, value.icon, SwingConstants.LEADING).apply {
                                 foreground = if (selected) JBColor.WHITE else JBColor.BLACK
                             }
                         }
