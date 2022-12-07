@@ -31,6 +31,7 @@ import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.dummy.DummyVirtualFile
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.table.TableReference
+import top.fallenangel.jimmergenerator.ui.table.column.BusinessKeyColumnInfo
 import top.fallenangel.jimmergenerator.ui.table.column.PropertyColumnInfo
 import top.fallenangel.jimmergenerator.ui.table.column.SelectedColumnInfo
 import top.fallenangel.jimmergenerator.ui.table.column.TypeColumnInfo
@@ -194,7 +195,8 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     SelectedColumnInfo(tableRef, ""),
                     TreeColumnInfo(uiBundle.getString("column_obj_name")),
                     PropertyColumnInfo(uiBundle.getString("column_property_name")),
-                    TypeColumnInfo(uiBundle.getString("column_property_type"))
+                    TypeColumnInfo(uiBundle.getString("column_property_type")),
+                    BusinessKeyColumnInfo(uiBundle.getString("column_business_key"))
                 )
                 tables.forEach { root.add(it) }
                 val tableModel = ListTreeTableModelOnColumns(root, columns)
@@ -233,7 +235,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
         tables.forEach {
             val writer = StringWriter()
             val tableEntityName = NameUtil.sneak2camel(it.name)
-            val table = DbObj(null, true, tableEntityName, "", Class(""), mutableListOf(), it.remark)
+            val table = DbObj(null, true, tableEntityName, "", false, Class(""), mutableListOf(), it.remark)
             val velocityContext = VelocityContext().apply {
                 put("package", selectedPackage)
                 put("importList", emptyList<String>())

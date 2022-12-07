@@ -131,3 +131,12 @@ fun String.field2property(prefix: String = "", suffix: String = "", uncapitalize
         NameUtil.sneak2camel(property)
     }
 }
+
+/**
+ * 判断列是否为应该默认为业务主键
+ */
+val DasColumn.isBusinessKey: Boolean
+    get() {
+        if (DasUtil.isPrimary(this)) return false
+        return DasUtil.isIndexColumn(this) && isNotNull
+    }

@@ -14,10 +14,7 @@ import top.fallenangel.jimmergenerator.model.DBType
 import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.Frame
-import top.fallenangel.jimmergenerator.util.Constant
-import top.fallenangel.jimmergenerator.util.captureAnnotations
-import top.fallenangel.jimmergenerator.util.captureType
-import top.fallenangel.jimmergenerator.util.field2property
+import top.fallenangel.jimmergenerator.util.*
 
 class MainEntry : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
@@ -29,7 +26,7 @@ class MainEntry : AnAction() {
         val tables = dbTables.map {
             DbObj(
                 null, true, it.name,
-                it.name.field2property(),
+                it.name.field2property(), false,
                 Class(it.name.field2property()),
                 SettingStorageComponent.storage.state.tableDefaultAnnotations.toMutableList(),
                 it.comment
@@ -39,7 +36,7 @@ class MainEntry : AnAction() {
                         .map { column ->
                             DbObj(
                                 column, true, column.name,
-                                column.name.field2property(uncapitalize = true),
+                                column.name.field2property(uncapitalize = true), column.isBusinessKey,
                                 column.captureType(Language.JAVA),
                                 column.captureAnnotations(Language.JAVA),
                                 column.comment

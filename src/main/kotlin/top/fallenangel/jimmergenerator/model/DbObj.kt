@@ -11,6 +11,7 @@ data class DbObj(
     var selected: Boolean,
     val name: String,
     var property: String,
+    var businessKey: Boolean,
     var type: Class,
     val annotations: MutableList<Annotation>,
     val remark: String?
