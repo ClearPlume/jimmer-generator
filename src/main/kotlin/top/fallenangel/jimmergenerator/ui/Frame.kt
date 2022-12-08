@@ -193,7 +193,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                 val columns = arrayOf(
                     SelectedColumnInfo(tableRef, ""),
                     TreeColumnInfo(uiBundle.getString("column_obj_name")),
-                    PropertyColumnInfo(uiBundle.getString("column_property_name")),
+                    PropertyColumnInfo(tableRef, uiBundle.getString("column_property_name")),
                     TypeColumnInfo(uiBundle.getString("column_property_type")),
                     BusinessKeyColumnInfo(uiBundle.getString("column_business_key"))
                 )
