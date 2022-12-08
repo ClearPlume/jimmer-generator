@@ -27,7 +27,7 @@ class BusinessKeyColumnInfo(name: String) : ColumnInfo<DbObj, Boolean>(name) {
         }
     }
 
-    override fun getWidth(table: JTable) = 70
+    override fun getWidth(table: JTable) = 100
 
     override fun isCellEditable(item: DbObj) = !item.isTable
 

@@ -150,7 +150,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
         titledRow(uiBundle.getString("split_naming_setting")) {
             row {
                 label(uiBundle.getString("label_remove_table_prefix"))
-                        .comment(uiBundle.getString("comment_split_naming"))
+                        .comment(uiBundle.getString("comment_split_naming"), -1)
                 textField(data::tablePrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
                 label(uiBundle.getString("label_remove_table_suffix")).withLargeLeftGap()
@@ -165,7 +165,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
             }
             row {
                 label(uiBundle.getString("label_remove_field_prefix"))
-                        .comment(uiBundle.getString("comment_split_naming"))
+                        .comment(uiBundle.getString("comment_split_naming"), -1)
                 textField(data::fieldPrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
                 label(uiBundle.getString("label_remove_field_suffix")).withLargeLeftGap()
@@ -184,7 +184,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                         }
                     }
                     tableRef.table.tableModel.valueForPathChanged(TreePath(root.path), null)
-                }.constraints(CCFlags.growX)
+                }.constraints(CCFlags.growX).comment(uiBundle.getString("comment_apply_naming_setting_button"), -1)
             }
         }
 
@@ -214,7 +214,10 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                 val tableSize = tableRef.table.preferredScrollableViewportSize
                 tableSize.height = tableSize.height + 200
                 tableRef.table.minimumSize = tableSize
-                scrollPane(tableRef.table).component.minimumSize = tableSize
+                scrollPane(tableRef.table).apply {
+                    component.minimumSize = tableSize
+                    comment(uiBundle.getString("comment_split_table"), 120)
+                }
             }
         }
     }
