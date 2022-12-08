@@ -3,7 +3,6 @@ package top.fallenangel.jimmergenerator.model
 import com.intellij.database.model.DasColumn
 import com.intellij.database.util.DasUtil
 import com.intellij.ui.CheckedTreeNode
-import com.jetbrains.rd.util.EnumSet
 import icons.DatabaseIcons
 import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class
@@ -27,15 +26,17 @@ data class DbObj(
 
     val icon: Icon
         get() {
-            val traits = EnumSet.noneOf(DbObjTrait::class.java)
+            var traits = if (isTable) {
+                DbObjTrait.TABLE or 0
+            } else {
+                DbObjTrait.COLUMN or 0
+            }
+            if (isPrimary) traits = DbObjTrait.PRIMARY or traits
+            if (DasUtil.isIndexColumn(column)) traits = DbObjTrait.INDEX or traits
+            if (DasUtil.isForeign(column)) traits = DbObjTrait.FOREIGN or traits
+            if (column?.isNotNull == true) traits = DbObjTrait.NOTNULL or traits
 
-            if (isTable) traits.add(DbObjTrait.TABLE) else traits.add(DbObjTrait.COLUMN)
-            if (isPrimary) traits.add(DbObjTrait.PRIMARY)
-            if (DasUtil.isIndexColumn(column)) traits.add(DbObjTrait.INDEX)
-            if (DasUtil.isForeign(column)) traits.add(DbObjTrait.FOREIGN)
-            if (column?.isNotNull == true) traits.add(DbObjTrait.NOTNULL)
-
-            return when (traits.map { 1 shl it.ordinal }.reduce { t, trait -> t or trait }) {
+            return when (traits) {
                 // TABLE
                 0b000001 -> DatabaseIcons.Table
                 // PRIMARY (INDEX + NOTNULL + COLUMN)
