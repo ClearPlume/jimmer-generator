@@ -92,6 +92,8 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     buttonGroup(data::language) {
                         radioButton(uiBundle.getString("radio_java"), Language.JAVA)
                         radioButton(uiBundle.getString("radio_kotlin"), Language.KOTLIN)
+                                .component
+                                .addItemListener { data.language = if (it.stateChange == ItemEvent.SELECTED) Language.KOTLIN else Language.JAVA }
                     }
                 }
             }
