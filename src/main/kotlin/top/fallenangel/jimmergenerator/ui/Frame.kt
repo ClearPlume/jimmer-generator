@@ -46,8 +46,9 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
     private val uiBundle = Constant.uiBundle
     private val messageBundle = Constant.messageBundle
 
-    private val tableRef = Reference<TreeTableView>()
+    private val languageRef = Reference(Language.JAVA)
     private val root = CheckedTreeNode()
+    private val tableRef = Reference<TreeTableView>()
     private val panel: DialogPanel = centerPanel()
 
     init {
@@ -93,7 +94,17 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                         radioButton(uiBundle.getString("radio_java"), Language.JAVA)
                         radioButton(uiBundle.getString("radio_kotlin"), Language.KOTLIN)
                                 .component
-                                .addItemListener { data.language = if (it.stateChange == ItemEvent.SELECTED) Language.KOTLIN else Language.JAVA }
+                                .addItemListener {
+                                    data.language = if (it.stateChange == ItemEvent.SELECTED) Language.KOTLIN else Language.JAVA
+                                    languageRef.value = data.language
+                                    val tables = root.children().toList().map { it as DbObj }
+                                    tables.forEach { table ->
+                                        table.children.forEach { column ->
+                                            column.type = column.column!!.captureType(data.language)
+                                        }
+                                    }
+                                    tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
+                                }
                     }
                 }
             }
@@ -192,7 +203,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     SelectedColumnInfo(tableRef, ""),
                     TreeColumnInfo(uiBundle.getString("column_obj_name")),
                     PropertyColumnInfo(tableRef, uiBundle.getString("column_property_name")),
-                    TypeColumnInfo(uiBundle.getString("column_property_type")),
+                    TypeColumnInfo(languageRef, uiBundle.getString("column_property_type")),
                     BusinessKeyColumnInfo(uiBundle.getString("column_business_key"))
                 )
                 tables.forEach { root.add(it) }

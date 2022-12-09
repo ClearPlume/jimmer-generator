@@ -4,13 +4,15 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.ColumnInfo
 import top.fallenangel.jimmergenerator.component.SettingStorageComponent
+import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.type.Class
+import top.fallenangel.jimmergenerator.util.Reference
 import javax.swing.DefaultCellEditor
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-class TypeColumnInfo(name: String) : ColumnInfo<DbObj, String>(name) {
+class TypeColumnInfo(private val languageRef: Reference<Language>, name: String) : ColumnInfo<DbObj, String>(name) {
     override fun setValue(item: DbObj, value: String) {
         item.type = Class(
             value.substringAfterLast('.'),
@@ -31,7 +33,17 @@ class TypeColumnInfo(name: String) : ColumnInfo<DbObj, String>(name) {
 
     override fun getEditor(item: DbObj): TableCellEditor {
         val typeMappings = SettingStorageComponent.storage.state.typeMappings
-        val types = (typeMappings.map { it.java } + typeMappings.map { it.javaPrimitives }).filterNot { it.isNullOrBlank() }.toTypedArray()
+        val types = if (languageRef.value == Language.JAVA) {
+            (typeMappings.map { it.java } + typeMappings.map { it.javaPrimitives })
+                    .filterNotNull()
+                    .filter { it.isNotBlank() }
+                    .sortedBy { it.lowercase() }
+                    .toTypedArray()
+        } else {
+            typeMappings.map { it.kotlin }
+                    .sortedBy { it.lowercase() }
+                    .toTypedArray()
+        }
         val editor = DefaultCellEditor(ComboBox(types))
         editor.clickCountToStart = 2
         return editor
