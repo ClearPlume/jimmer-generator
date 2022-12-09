@@ -29,10 +29,7 @@ import top.fallenangel.jimmergenerator.model.DBType
 import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.dummy.DummyVirtualFile
 import top.fallenangel.jimmergenerator.model.type.Class
-import top.fallenangel.jimmergenerator.ui.table.BusinessKeyColumnInfo
-import top.fallenangel.jimmergenerator.ui.table.PropertyColumnInfo
-import top.fallenangel.jimmergenerator.ui.table.SelectedColumnInfo
-import top.fallenangel.jimmergenerator.ui.table.TypeColumnInfo
+import top.fallenangel.jimmergenerator.ui.table.*
 import top.fallenangel.jimmergenerator.util.*
 import java.awt.event.ItemEvent
 import java.io.InputStreamReader
@@ -204,7 +201,8 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     TreeColumnInfo(uiBundle.getString("column_obj_name")),
                     PropertyColumnInfo(tableRef, uiBundle.getString("column_property_name")),
                     TypeColumnInfo(languageRef, uiBundle.getString("column_property_type")),
-                    BusinessKeyColumnInfo(uiBundle.getString("column_business_key"))
+                    BusinessKeyColumnInfo(uiBundle.getString("column_business_key")),
+                    NullableColumnInfo(uiBundle.getString("column_nullable"))
                 )
                 tables.forEach { root.add(it) }
                 val tableModel = ListTreeTableModelOnColumns(root, columns)
