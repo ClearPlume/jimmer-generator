@@ -29,15 +29,11 @@ import top.fallenangel.jimmergenerator.model.DBType
 import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.dummy.DummyVirtualFile
 import top.fallenangel.jimmergenerator.model.type.Class
-import top.fallenangel.jimmergenerator.ui.table.TableReference
-import top.fallenangel.jimmergenerator.ui.table.column.BusinessKeyColumnInfo
-import top.fallenangel.jimmergenerator.ui.table.column.PropertyColumnInfo
-import top.fallenangel.jimmergenerator.ui.table.column.SelectedColumnInfo
-import top.fallenangel.jimmergenerator.ui.table.column.TypeColumnInfo
-import top.fallenangel.jimmergenerator.util.Constant
-import top.fallenangel.jimmergenerator.util.NameUtil
-import top.fallenangel.jimmergenerator.util.ResourceUtil
-import top.fallenangel.jimmergenerator.util.field2property
+import top.fallenangel.jimmergenerator.ui.table.BusinessKeyColumnInfo
+import top.fallenangel.jimmergenerator.ui.table.PropertyColumnInfo
+import top.fallenangel.jimmergenerator.ui.table.SelectedColumnInfo
+import top.fallenangel.jimmergenerator.ui.table.TypeColumnInfo
+import top.fallenangel.jimmergenerator.util.*
 import java.awt.event.ItemEvent
 import java.io.InputStreamReader
 import java.io.StringWriter
@@ -50,7 +46,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
     private val uiBundle = Constant.uiBundle
     private val messageBundle = Constant.messageBundle
 
-    private val tableRef = TableReference()
+    private val tableRef = Reference<TreeTableView>()
     private val root = CheckedTreeNode()
     private val panel: DialogPanel = centerPanel()
 
@@ -183,7 +179,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                             it.property = it.name.field2property(data.fieldPrefix, data.fieldSuffix, true)
                         }
                     }
-                    tableRef.table.tableModel.valueForPathChanged(TreePath(root.path), null)
+                    tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
                 }.constraints(CCFlags.growX).comment(uiBundle.getString("comment_apply_naming_setting_button"), -1)
             }
         }
@@ -199,7 +195,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                 )
                 tables.forEach { root.add(it) }
                 val tableModel = ListTreeTableModelOnColumns(root, columns)
-                tableRef.table = TreeTableView(tableModel).apply {
+                tableRef.value = TreeTableView(tableModel).apply {
                     rowHeight = 26
                     setTreeCellRenderer(
                         TreeCellRenderer { _, value, selected, _, _, _, _ ->
@@ -211,10 +207,10 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     )
                 }
                 // 设置表格最小尺寸
-                val tableSize = tableRef.table.preferredScrollableViewportSize
+                val tableSize = tableRef.value.preferredScrollableViewportSize
                 tableSize.height = tableSize.height + 200
-                tableRef.table.minimumSize = tableSize
-                scrollPane(tableRef.table).apply {
+                tableRef.value.minimumSize = tableSize
+                scrollPane(tableRef.value).apply {
                     component.minimumSize = tableSize
                     comment(uiBundle.getString("comment_split_table"), 120)
                 }

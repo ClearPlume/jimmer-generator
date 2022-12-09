@@ -1,4 +1,4 @@
-package top.fallenangel.jimmergenerator.ui.table.column
+package top.fallenangel.jimmergenerator.ui.table
 
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.util.ui.ColumnInfo

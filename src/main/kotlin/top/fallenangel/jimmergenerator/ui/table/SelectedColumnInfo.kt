@@ -1,28 +1,29 @@
-package top.fallenangel.jimmergenerator.ui.table.column
+package top.fallenangel.jimmergenerator.ui.table
 
 import com.intellij.ui.components.JBCheckBox
+import com.intellij.ui.dualView.TreeTableView
 import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ThreeStateCheckBox
 import top.fallenangel.jimmergenerator.model.DbObj
-import top.fallenangel.jimmergenerator.ui.table.TableReference
+import top.fallenangel.jimmergenerator.util.Reference
 import javax.swing.DefaultCellEditor
 import javax.swing.JTable
 import javax.swing.table.TableCellRenderer
 import javax.swing.tree.TreePath
 
-class SelectedColumnInfo(private val tableRef: TableReference, name: String) : ColumnInfo<DbObj, Boolean>(name) {
+class SelectedColumnInfo(private val tableRef: Reference<TreeTableView>, name: String) : ColumnInfo<DbObj, Boolean>(name) {
     override fun setValue(item: DbObj, value: Boolean) {
         when {
             item.isTable && value -> {
                 item.selected = true
                 item.children.forEach { it.selected = true }
-                tableRef.table.tableModel.valueForPathChanged(TreePath(item.path), true)
+                tableRef.value.tableModel.valueForPathChanged(TreePath(item.path), true)
             }
 
             !item.isTable || value -> {
                 item.selected = value
                 item.children.forEach { it.selected = value }
-                tableRef.table.tableModel.valueForPathChanged(TreePath(item.path), value)
+                tableRef.value.tableModel.valueForPathChanged(TreePath(item.path), value)
             }
 
             else -> {
@@ -30,11 +31,11 @@ class SelectedColumnInfo(private val tableRef: TableReference, name: String) : C
                 if (allSelected) {
                     item.selected = false
                     item.children.forEach { it.selected = false }
-                    tableRef.table.tableModel.valueForPathChanged(TreePath(item.path), false)
+                    tableRef.value.tableModel.valueForPathChanged(TreePath(item.path), false)
                 } else {
                     item.selected = true
                     item.children.forEach { it.selected = true }
-                    tableRef.table.tableModel.valueForPathChanged(TreePath(item.path), true)
+                    tableRef.value.tableModel.valueForPathChanged(TreePath(item.path), true)
                 }
             }
         }
