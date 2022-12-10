@@ -9,6 +9,8 @@ import top.fallenangel.jimmergenerator.model.dummy.DummyVirtualFile
 import java.util.*
 
 object Constant {
+    const val jimmerPackage = "org.babyfish.jimmer.sql"
+
     val uiBundle: ResourceBundle = ResourceBundle.getBundle("locales.ui", Locale.CHINESE)
     val messageBundle: ResourceBundle = ResourceBundle.getBundle("locales.message", Locale.CHINESE)
 

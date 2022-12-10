@@ -101,11 +101,11 @@ fun DasColumn.captureAnnotations(language: Language): MutableList<Annotation> {
     val primary = DasUtil.isPrimary(this)
 
     if (primary) {
-        annotations.add(Annotation("Id", "org.babyfish.jimmer.sql", emptyList()))
+        annotations.add(Annotation("Id", Constant.jimmerPackage, emptyList()))
         annotations.add(
             Annotation(
-                "GeneratedValue", "org.babyfish.jimmer.sql",
-                listOf(Parameter("strategy", "GenerationType.IDENTITY", Class("GenerationType", "org.babyfish.jimmer.sql")))
+                "GeneratedValue", Constant.jimmerPackage,
+                listOf(Parameter("strategy", "GenerationType.IDENTITY", Class("GenerationType", Constant.jimmerPackage)))
             )
         )
     } else if (language == Language.JAVA && !isNotNull) {

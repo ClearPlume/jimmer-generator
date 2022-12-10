@@ -12,7 +12,9 @@ import top.fallenangel.jimmergenerator.component.SettingStorageComponent
 import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.model.DBType
 import top.fallenangel.jimmergenerator.model.DbObj
+import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class
+import top.fallenangel.jimmergenerator.model.type.Parameter
 import top.fallenangel.jimmergenerator.ui.Frame
 import top.fallenangel.jimmergenerator.util.*
 
@@ -24,11 +26,16 @@ class MainEntry : AnAction() {
         val dbType = DBType.valueOf(dbTables[0].dataSource.dbms)
 
         val tables = dbTables.map {
+            val tableAnnotation = Annotation(
+                "Table", Constant.jimmerPackage, listOf(
+                    Parameter("name", it.name, Class("String"))
+                )
+            )
             DbObj(
                 null, true, it.name,
                 it.name.field2property(), false,
                 Class(it.name.field2property()),
-                SettingStorageComponent.tableDefaultAnnotations.toMutableList(),
+                (SettingStorageComponent.tableDefaultAnnotations + tableAnnotation).toMutableList(),
                 it.comment
             ).also { table ->
                 DasUtil.getColumns(it)
