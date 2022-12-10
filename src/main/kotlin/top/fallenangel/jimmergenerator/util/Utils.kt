@@ -111,6 +111,9 @@ fun DasColumn.captureAnnotations(language: Language): MutableList<Annotation> {
     } else if (language == Language.JAVA && !isNotNull) {
         annotations.add(Annotation("Null", "javax.validation.constraints", emptyList()))
     }
+    if (isBusinessKey) {
+        annotations.add(Annotation("Key", Constant.jimmerPackage, emptyList()))
+    }
     return annotations
 }
 
