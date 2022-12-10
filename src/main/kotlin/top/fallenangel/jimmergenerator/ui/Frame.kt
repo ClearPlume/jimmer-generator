@@ -194,37 +194,35 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
             }
         }
 
-        titledRow(uiBundle.getString("split_table_mapping")) {
-            row {
-                val columns = arrayOf(
-                    SelectedColumnInfo(tableRef, ""),
-                    TreeColumnInfo(uiBundle.getString("column_obj_name")),
-                    PropertyColumnInfo(tableRef, uiBundle.getString("column_property_name")),
-                    TypeColumnInfo(languageRef, uiBundle.getString("column_property_type")),
-                    BusinessKeyColumnInfo(uiBundle.getString("column_business_key")),
-                    NullableColumnInfo(uiBundle.getString("column_nullable"))
-                )
-                tables.forEach { root.add(it) }
-                val tableModel = ListTreeTableModelOnColumns(root, columns)
-                tableRef.value = TreeTableView(tableModel).apply {
-                    rowHeight = 26
-                    setTreeCellRenderer(
-                        TreeCellRenderer { _, value, selected, _, _, _, _ ->
-                            if (value !is DbObj) return@TreeCellRenderer JBLabel("")
-                            return@TreeCellRenderer JBLabel(value.name, value.icon, SwingConstants.LEADING).apply {
-                                foreground = if (selected) JBColor.WHITE else JBColor.BLACK
-                            }
+        row {
+            val columns = arrayOf(
+                SelectedColumnInfo(tableRef, ""),
+                TreeColumnInfo(uiBundle.getString("column_obj_name")),
+                PropertyColumnInfo(tableRef, uiBundle.getString("column_property_name")),
+                TypeColumnInfo(languageRef, uiBundle.getString("column_property_type")),
+                BusinessKeyColumnInfo(uiBundle.getString("column_business_key")),
+                NullableColumnInfo(uiBundle.getString("column_nullable"))
+            )
+            tables.forEach { root.add(it) }
+            val tableModel = ListTreeTableModelOnColumns(root, columns)
+            tableRef.value = TreeTableView(tableModel).apply {
+                rowHeight = 26
+                setTreeCellRenderer(
+                    TreeCellRenderer { _, value, selected, _, _, _, _ ->
+                        if (value !is DbObj) return@TreeCellRenderer JBLabel("")
+                        return@TreeCellRenderer JBLabel(value.name, value.icon, SwingConstants.LEADING).apply {
+                            foreground = if (selected) JBColor.WHITE else JBColor.BLACK
                         }
-                    )
-                }
-                // 设置表格最小尺寸
-                val tableSize = tableRef.value.preferredScrollableViewportSize
-                tableSize.height = tableSize.height + 200
-                tableRef.value.minimumSize = tableSize
-                scrollPane(tableRef.value).apply {
-                    component.minimumSize = tableSize
-                    comment(uiBundle.getString("comment_split_table"), 120)
-                }
+                    }
+                )
+            }
+            // 设置表格最小尺寸
+            val tableSize = tableRef.value.preferredScrollableViewportSize
+            tableSize.height = tableSize.height + 200
+            tableRef.value.minimumSize = tableSize
+            scrollPane(tableRef.value).apply {
+                component.minimumSize = tableSize
+                comment(uiBundle.getString("comment_split_table"), 120)
             }
         }
     }
