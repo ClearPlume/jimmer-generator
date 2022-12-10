@@ -73,8 +73,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     Messages.showWarningDialog(project, messageBundle.getString("source_root_not_select_warning"), uiBundle.getString("warning"))
                     return@ok false
                 }
-                generateCode()
-                return@ok true
+                return@ok generateCode()
             }
             cancelText(uiBundle.getString("button_cancel"))
             exhibit()
@@ -229,7 +228,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
         }
     }
 
-    private fun generateCode() {
+    private fun generateCode(): Boolean {
         val selectedPackage = data.`package`
         val selectedPath = "${data.sourceRoot.path}/${selectedPackage.replace('.', '/')}"
         val fileExt = data.language.fileExt
@@ -260,8 +259,12 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
             velocityEngine.evaluate(velocityContext, writer, "Velocity Code Generate", template)
 
             val psiManager = PsiManager.getInstance(project)
+            val selectVirtualPackage = LocalFileSystem.getInstance().findFileByPath(selectedPath)
+            if (selectVirtualPackage == null) {
+                Messages.showWarningDialog(project, messageBundle.getString("save_path_not_exists"), uiBundle.getString("warning"))
+                return false
+            }
             val classFile = WriteCommandAction.runWriteCommandAction(project, Computable {
-                val selectVirtualPackage = LocalFileSystem.getInstance().findFileByPath(selectedPath)!!
                 val selectedDirectory = psiManager.findDirectory(selectVirtualPackage)!!
                 selectedDirectory.findFile("$tableEntityName.$fileExt")?.delete()
 
@@ -273,7 +276,6 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                 ReformatCodeProcessor(project, this, null, false).run()
             }
 
-            val selectVirtualPackage = LocalFileSystem.getInstance().findFileByPath(selectedPath)!!
             val baseTableEntityFileName = "${tableEntityName}Base.$fileExt"
             selectVirtualPackage.findChild(baseTableEntityFileName) ?: run {
                 val baseWriter = StringWriter()
@@ -300,6 +302,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
             template.close()
         }
         Messages.showInfoMessage(project, messageBundle.getString("entities_generate_success_info"), uiBundle.getString("tips"))
+        return true
     }
 }
 
