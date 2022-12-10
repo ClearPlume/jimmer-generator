@@ -98,6 +98,8 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                                     tables.forEach { table ->
                                         table.children.forEach { column ->
                                             column.type = column.column!!.captureType(data.language)
+                                            column.annotations.clear()
+                                            column.annotations.addAll(column.column.captureAnnotations(data.language))
                                         }
                                     }
                                     tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
