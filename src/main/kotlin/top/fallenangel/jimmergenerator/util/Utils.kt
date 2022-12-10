@@ -56,7 +56,7 @@ fun String.uncapitalize(): String {
  * @param language 语言, Java OR Kotlin
  */
 fun DasColumn.captureType(language: Language): Class {
-    val typeMappings = SettingStorageComponent.storage.state.typeMappings
+    val typeMappings = SettingStorageComponent.typeMappings
     for (typeMapping in typeMappings) {
         if (Regex(typeMapping.column, RegexOption.IGNORE_CASE).matches(dataType.typeName)) {
             return when (language) {

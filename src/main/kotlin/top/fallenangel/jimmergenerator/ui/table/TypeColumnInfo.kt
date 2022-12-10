@@ -32,17 +32,10 @@ class TypeColumnInfo(private val languageRef: Reference<Language>, name: String)
     override fun isCellEditable(item: DbObj) = !item.isTable
 
     override fun getEditor(item: DbObj): TableCellEditor {
-        val typeMappings = SettingStorageComponent.storage.state.typeMappings
         val types = if (languageRef.value == Language.JAVA) {
-            (typeMappings.map { it.java } + typeMappings.map { it.javaPrimitives })
-                    .filterNotNull()
-                    .filter { it.isNotBlank() }
-                    .sortedBy { it.lowercase() }
-                    .toTypedArray()
+            SettingStorageComponent.javaTypes.toTypedArray()
         } else {
-            typeMappings.map { it.kotlin }
-                    .sortedBy { it.lowercase() }
-                    .toTypedArray()
+            SettingStorageComponent.kotlinTypes.toTypedArray()
         }
         val editor = DefaultCellEditor(ComboBox(types))
         editor.clickCountToStart = 2

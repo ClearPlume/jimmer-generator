@@ -28,7 +28,7 @@ class MainEntry : AnAction() {
                 null, true, it.name,
                 it.name.field2property(), false,
                 Class(it.name.field2property()),
-                SettingStorageComponent.storage.state.tableDefaultAnnotations.toMutableList(),
+                SettingStorageComponent.tableDefaultAnnotations.toMutableList(),
                 it.comment
             ).also { table ->
                 DasUtil.getColumns(it)
