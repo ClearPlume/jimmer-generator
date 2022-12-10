@@ -232,19 +232,28 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
     private fun generateCode() {
         val selectedPackage = data.`package`
         val selectedPath = "${data.sourceRoot.path}/${selectedPackage.replace('.', '/')}"
-        val language = data.language
         val fileExt = data.language.fileExt
+
+        val tableAnnotations = tables.map {
+            it.annotations + it.children.map { column ->
+                column.annotations
+            }.flatten()
+        }.flatten()
+        val annotationImports = tableAnnotations.map { it.import }
+        val parameterImports = tableAnnotations.map { it.parameters }
+                .flatten()
+                .filter { it.type.`package`.isNotBlank() }
+                .map { it.type.import }
 
         // 保存选中的表
         val velocityEngine = VelocityEngine()
         tables.forEach {
             val writer = StringWriter()
-            val tableEntityName = NameUtil.sneak2camel(it.name)
-            val table = DbObj(null, true, tableEntityName, "", false, Class(""), mutableListOf(), it.remark)
+            val tableEntityName = it.property
             val velocityContext = VelocityContext().apply {
                 put("package", selectedPackage)
-                put("importList", emptyList<String>())
-                put("table", table)
+                put("importList", (annotationImports + parameterImports).toSet())
+                put("table", it)
             }
 
             val template = InputStreamReader(ResourceUtil.getResourceAsStream("/templates/$fileExt.vm"))
@@ -270,7 +279,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                 val baseWriter = StringWriter()
                 val baseVelocityContext = VelocityContext().apply {
                     put("package", selectedPackage)
-                    put("table", table)
+                    put("table", it)
                 }
                 val baseTemplate = InputStreamReader(ResourceUtil.getResourceAsStream("/templates/$fileExt-base.vm"))
                 velocityEngine.evaluate(baseVelocityContext, baseWriter, "Velocity Code Generate Base", baseTemplate)

@@ -8,5 +8,5 @@ import org.babyfish.jimmer.sql.MappedSuperclass;
 * Base entity for table "$table.name"
 */
 @MappedSuperclass
-public interface ${table.name}Base {
+public interface ${table.property}Base {
 }

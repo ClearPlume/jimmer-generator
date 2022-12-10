@@ -13,8 +13,8 @@ import $import
 * Entity for table "$table.name"
 */
 #end
-@Entity
-interface $table.name : ${table.name}Base {
+#parseAnnotations($table.annotations false)
+interface $table.property : ${table.property}Base {
 #foreach($field in $table.children)
     #if($velocityCount != 1)
 
@@ -24,11 +24,21 @@ interface $table.name : ${table.name}Base {
     * $field.remark
     */
     #end
-    #if(!$field.annotations.isEmpty())
-        #foreach($annotation in $field.annotations)
-        @$annotation
-        #end
-    #end
-    val $field.name: $field.type
+    #parseAnnotations($field.annotations true)
+val $field.property: $field.type.name#if($field.type.nullable)?#end
 #end
 }
+
+#macro(parseAnnotations $annotations $needLastLineBreak)
+    #foreach($annotation in $annotations)
+    @$annotation.name#if(!$annotation.parameters.empty)
+    (#foreach($param in $annotation.parameters)
+            #set($needQuote = $param.type.name == "String")
+            $param.name = #if($needQuote)"#end$param.value#if($needQuote)"#end#if($velocityHasNext), #end
+        #end)
+    #end
+        #if($velocityHasNext || $needLastLineBreak)
+
+        #end
+    #end
+#end
