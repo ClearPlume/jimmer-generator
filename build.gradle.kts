@@ -1,7 +1,7 @@
 plugins {
-    id("org.jetbrains.intellij") version "1.10.0"
+    id("org.jetbrains.intellij") version "1.10.1"
     id("java")
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.7.21"
 }
 
 group = "top.fallenangel"
@@ -12,8 +12,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
-    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.19")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.21")
+    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.20")
 }
 
 // Configure Gradle IntelliJ Plugin
@@ -24,7 +24,7 @@ intellij {
     version.set("2020.3.4")
     plugins.set(
         listOf(
-            "java",
+            "com.intellij.java",
             "com.intellij.database"
         )
     )
