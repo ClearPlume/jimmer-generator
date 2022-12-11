@@ -1,7 +1,7 @@
 #if(!$package.blank)
 package $package
-#end
 
+#end
 #foreach($import in $importList)
 import $import
 #end
@@ -13,7 +13,7 @@ import $import
 * Entity for table "$table.name"
 */
 #end
-#parseAnnotations($table.annotations false)
+#parseAnnotations($table.annotations)
 interface $table.property : ${table.property}Base {
 #foreach($field in $table.children)
     #if($velocityCount != 1)
@@ -24,21 +24,16 @@ interface $table.property : ${table.property}Base {
     * $field.remark
     */
     #end
-    #parseAnnotations($field.annotations true)
+    #parseAnnotations($field.annotations)
 val $field.property: $field.type.name#if($field.type.nullable)?#end
 #end
 }
 
-#macro(parseAnnotations $annotations $needLastLineBreak)
+#macro(parseAnnotations $annotations)
     #foreach($annotation in $annotations)
-    @$annotation.name#if(!$annotation.parameters.empty)
-    (#foreach($param in $annotation.parameters)
-            #set($needQuote = $param.type.name == "String")
-            $param.name = #if($needQuote)"#end$param.value#if($needQuote)"#end#if($velocityHasNext), #end
-        #end)
-    #end
-        #if($velocityHasNext || $needLastLineBreak)
-
-        #end
+    @$annotation.name#if(!$annotation.parameters.empty)(#foreach($param in $annotation.parameters)
+        #set($needQuote = $param.type.name == "String")
+        $param.name = #if($needQuote)"#end$param.value#if($needQuote)"#end#if($velocityHasNext), #end
+    #end)#end
     #end
 #end
