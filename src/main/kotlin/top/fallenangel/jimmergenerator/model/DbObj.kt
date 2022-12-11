@@ -77,7 +77,9 @@ data class DbObj(
             )
         }
 
-        if (!isTable) {
+        if (isTable) {
+            annotations.add(Annotation("Entity", Constant.jimmerPackage, emptyList()))
+        } else {
             if (isPrimary) {
                 annotations.add(Annotation("Id", Constant.jimmerPackage, emptyList()))
                 annotations.add(
