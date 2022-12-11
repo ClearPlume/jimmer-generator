@@ -29,14 +29,27 @@
   ]]></description>
 
     <change-notes><![CDATA[
-    <p><b>2.0.0(2022-11-01)</b></p>
+    <p><b>0.3.0 (2022-12-11)</b></p>
+    <ul>
+        <li><b>(Feature)</b>Chinese</li>
+        <li><b>(Feature)</b>Support removing prefixes and suffixes of table names and column names with regularity expression, and adding prefixes and suffixes to table names which prefixes and suffixes removed</li>
+        <li><b>(Feature)</b>Add a new mapping table with six columns: (checkbox), database object, attribute name, data type, business primary key, nullability, showing the selected table and column names in a tree structure</li>
+    </ul>
+    <ul>
+        <li><b>(新特性)</b>中文</li>
+        <li><b>(新特性)</b>支持使用正则表达式去除表名、列名的前后缀，支持为调整后的表名添加前后缀</li>
+        <li><b>(新特性)</b>新增映射表，包含六列：(复选框)、数据库对象、属性名称、数据类型、业务主键、可空性，以树形结构展示选中的表名和列名</li>
+    </ul>
+    <hr/>
+    <p><b>0.2.0 (2022-11-01)</b></p>
     <ul>
         <li><b>(Optimize)</b>Add GUI interface to optimize the use experience</li>
     </ul>
     <ul>
         <li><b>(优化)</b>加入GUI界面，优化使用体验</li>
     </ul>
-    <p><b>1.1.1(2022-10-27)</b></p>
+    <hr/>
+    <p><b>0.1.1 (2022-10-27)</b></p>
     <ul>
         <li><b>(Bug Fix)</b>JimmerGenerator on PersistentStateComponent, and may report an error if it runs directly after installation</li>
         <li><b>(Optimize)</b>Change Notes adjustment, adding split line, bold version number, optimize the reading experience</li>
@@ -46,7 +59,7 @@
         <li><b>(优化)</b>Change Notes 调整，加入分割线，版本号加粗，优化阅读体验</li>
     </ul>
     <hr/>
-    <p><b>1.1.0(2022-10-26)</b></p>
+    <p><b>0.1.0 (2022-10-26)</b></p>
     <ul>
       <li><b>(Feature)</b>Minimum supported version adjusted to 2020.3.4</li>
       <li><b>(Optimize)</b>Annotation adjustment of the primary key field in the generated interface classes(GeneratedValue -> GeneratedValue(strategy = GenerationType.IDENTITY))</li>
@@ -62,7 +75,7 @@
       <li><b>(修复bug)</b>选择实体类接口的保存包路径时，即使取消选择，也会生成实体类接口</li>
     </ul>
     <hr/>
-    <p><b>1.0.1(2022-10-20)</b></p>
+    <p><b>0.0.2 (2022-10-20)</b></p>
     <ul>
       <li><b>Optimize</b>Optimize the logic of inserting package importing code blocks for the generated interface classes</li>
     </ul>
@@ -70,7 +83,7 @@
       <li><b>优化</b>优化为生成的接口类插入导包代码块的逻辑</li>
     </ul>
     <hr/>
-    <p><b>1.0.0(2022-10-13)</b></p>
+    <p><b>0.0.1 (2022-10-13)</b></p>
     <ul>
       <li>Plugin published</li>
     </ul>

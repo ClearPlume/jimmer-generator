@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "top.fallenangel"
-version = "2.0.0"
+version = "0.3.0"
 
 repositories {
     mavenCentral()
