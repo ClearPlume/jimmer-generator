@@ -38,7 +38,7 @@ import javax.swing.SwingConstants
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreePath
 
-class Frame(private val project: Project, private val modules: List<Module>, private val tables: List<DbObj>, dbType: DBType) {
+class Frame(private val project: Project, private val modules: List<Module>, private val tables: List<DbObj>, private val dbType: DBType) {
     private val data = FrameData()
     private val uiBundle = Constant.uiBundle
     private val messageBundle = Constant.messageBundle
@@ -93,12 +93,10 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                                 .addItemListener {
                                     data.language = if (it.stateChange == ItemEvent.SELECTED) Language.KOTLIN else Language.JAVA
                                     languageRef.value = data.language
-                                    val tables = root.children().toList().map { it as DbObj }
+                                    val tables = root.children().toList().map { table -> table as DbObj }
                                     tables.forEach { table ->
                                         table.children.forEach { column ->
                                             column.type = column.column!!.captureType(data.language)
-                                            column.annotations.clear()
-                                            column.annotations.addAll(column.column.captureAnnotations(data.language))
                                         }
                                     }
                                     tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
@@ -233,25 +231,32 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
         val selectedPath = "${data.sourceRoot.path}/${selectedPackage.replace('.', '/')}"
         val fileExt = data.language.fileExt
 
-        val tableAnnotations = tables.map {
-            it.annotations + it.children.map { column ->
-                column.annotations
-            }.flatten()
-        }.flatten()
-        val annotationImports = tableAnnotations.map { it.import }
-        val parameterImports = tableAnnotations.map { it.parameters }
-                .flatten()
-                .filter { it.type.`package`.isNotBlank() }
-                .map { it.type.import }
-
         // 保存选中的表
         val velocityEngine = VelocityEngine()
         tables.forEach {
+            // 计算实体和属性的注解列表
+            it.captureAnnotations(data.language, dbType)
+            it.children.forEach { column -> column.captureAnnotations(data.language, dbType) }
+
+            // 计算每张表的注解导包列表
+            val tableAnnotations = it.annotations + it.children.map { column -> column.annotations }.flatten()
+            val annotationImports = tableAnnotations.map { annotation -> annotation.import }
+            val parameterImports = tableAnnotations.map { annotation -> annotation.parameters }
+                    .flatten()
+                    .filter { param -> param.type.`package`.isNotBlank() }
+                    .map { param -> param.type.import }
+
+            // 计算每张表的类型导包列表
+            val fieldImports = it.children
+                    .map { field -> field.type }
+                    .filter { type -> type.`package`.isNotBlank() }
+                    .map { type -> type.import }
+
             val writer = StringWriter()
             val tableEntityName = it.property
             val velocityContext = VelocityContext().apply {
                 put("package", selectedPackage)
-                put("importList", (annotationImports + parameterImports).toSet())
+                put("importList", (annotationImports + parameterImports + fieldImports).toSet())
                 put("table", it)
             }
 

@@ -2,8 +2,8 @@ package top.fallenangel.jimmergenerator.model
 
 import com.intellij.database.Dbms
 
-enum class DBType(l: String, r: String) {
-    ORACLE("\"", "\""), MEMSQL("", ""), MYSQL("`", "`"), POSTGRES("\"", "\""),
+enum class DBType(val l: String, val r: String) {
+    ORACLE("""\"""", """\""""), MEMSQL("", ""), MYSQL("`", "`"), POSTGRES("""\"""", """\""""),
     MSSQL("[", "]"), DB2("",""), SQLITE("",""), H2("",""), MONGO("","");
 
     companion object {

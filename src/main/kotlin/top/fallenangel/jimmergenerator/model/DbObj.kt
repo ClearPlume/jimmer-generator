@@ -4,8 +4,11 @@ import com.intellij.database.model.DasColumn
 import com.intellij.database.util.DasUtil
 import com.intellij.ui.CheckedTreeNode
 import icons.DatabaseIcons
+import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class
+import top.fallenangel.jimmergenerator.model.type.Parameter
+import top.fallenangel.jimmergenerator.util.Constant
 import javax.swing.Icon
 
 data class DbObj(
@@ -21,7 +24,7 @@ data class DbObj(
     val isTable: Boolean
         get() = column == null
 
-    val isPrimary: Boolean
+    private val isPrimary: Boolean
         get() = DasUtil.isPrimary(column)
 
     val icon: Icon
@@ -58,4 +61,38 @@ data class DbObj(
 
     val children: List<DbObj>
         get() = if (isTable) children.map { it as DbObj } else emptyList()
+
+    fun captureAnnotations(language: Language, dbType: DBType) {
+        annotations.clear()
+        val nameAnnotation = if (isTable) "Table" else "Column"
+        val needNameAnnotation = name.replace("_", "").lowercase() != property.lowercase()
+        if (needNameAnnotation) {
+            val needQuotes = name.contains(Regex("\\W|^\\d"))
+            annotations.add(
+                Annotation(
+                    nameAnnotation, Constant.jimmerPackage, listOf(
+                        Parameter("name", if (needQuotes) "${dbType.l}$name${dbType.r}" else name, Class("String"))
+                    )
+                )
+            )
+        }
+
+        if (!isTable) {
+            if (isPrimary) {
+                annotations.add(Annotation("Id", Constant.jimmerPackage, emptyList()))
+                annotations.add(
+                    Annotation(
+                        "GeneratedValue", Constant.jimmerPackage,
+                        listOf(Parameter("strategy", "GenerationType.IDENTITY", Class("GenerationType", Constant.jimmerPackage)))
+                    )
+                )
+            }
+            if (language == Language.JAVA && type.nullable) {
+                annotations.add(Annotation("Null", "javax.validation.constraints", emptyList()))
+            }
+            if (businessKey) {
+                annotations.add(Annotation("Key", Constant.jimmerPackage, emptyList()))
+            }
+        }
+    }
 }
