@@ -21,7 +21,7 @@ class TypeColumnInfo(private val languageRef: Reference<Language>, name: String)
         )
     }
 
-    override fun valueOf(item: DbObj) = item.type.name
+    override fun valueOf(item: DbObj) = item.type.import
 
     override fun getRenderer(item: DbObj): TableCellRenderer {
         return TableCellRenderer { _, value, _, _, _, _ ->

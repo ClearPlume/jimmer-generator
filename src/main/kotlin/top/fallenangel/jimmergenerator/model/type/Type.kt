@@ -4,5 +4,9 @@ interface Type {
     val name: String
     val `package`: String
     val import: String
-        get() = "$`package`.$name"
+        get() = if (`package`.isNotBlank()) {
+            "$`package`.$name"
+        } else {
+            name
+        }
 }
