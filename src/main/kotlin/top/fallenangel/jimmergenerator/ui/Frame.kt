@@ -20,7 +20,6 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.dualView.TreeTableView
 import com.intellij.ui.layout.CCFlags
 import com.intellij.ui.layout.GrowPolicy
-import com.intellij.ui.layout.buttonGroup
 import com.intellij.ui.layout.panel
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModelOnColumns
 import com.intellij.ui.treeStructure.treetable.TreeColumnInfo
@@ -85,9 +84,9 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
 
             row(uiBundle.getString("label_language")) {
                 cell {
-                    buttonGroup(data::language) {
-                        radioButton(uiBundle.getString("radio_java"), Language.JAVA)
-                        radioButton(uiBundle.getString("radio_kotlin"), Language.KOTLIN)
+                    radioGroup(data::language) {
+                        radio(uiBundle.getString("radio_java"), Language.JAVA)
+                        radio(uiBundle.getString("radio_kotlin"), Language.KOTLIN)
                                 .component
                                 .addItemListener {
                                     data.language = if (it.stateChange == ItemEvent.SELECTED) Language.KOTLIN else Language.JAVA
