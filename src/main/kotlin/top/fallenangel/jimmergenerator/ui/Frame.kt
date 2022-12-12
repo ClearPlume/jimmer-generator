@@ -12,7 +12,10 @@ import com.intellij.openapi.util.Computable
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
-import com.intellij.ui.*
+import com.intellij.ui.CheckedTreeNode
+import com.intellij.ui.JBColor
+import com.intellij.ui.MutableCollectionComboBoxModel
+import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.dualView.TreeTableView
 import com.intellij.ui.layout.CCFlags
@@ -27,19 +30,19 @@ import org.apache.velocity.app.VelocityEngine
 import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.model.DBType
 import top.fallenangel.jimmergenerator.model.DbObj
-import top.fallenangel.jimmergenerator.model.dummy.DummyVirtualFile
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.table.*
 import top.fallenangel.jimmergenerator.util.*
 import java.awt.event.ItemEvent
 import java.io.InputStreamReader
 import java.io.StringWriter
+import javax.swing.DefaultComboBoxModel
 import javax.swing.SwingConstants
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreePath
 
-class Frame(private val project: Project, private val modules: List<Module>, private val tables: List<DbObj>, private val dbType: DBType) {
-    private val data = FrameData()
+class Frame(private val project: Project, private val modules: Array<Module>, private val tables: List<DbObj>, private val dbType: DBType) {
+    private val data = FrameData().apply { module = modules[0] }
     private val uiBundle = Constant.uiBundle
     private val messageBundle = Constant.messageBundle
 
@@ -63,10 +66,6 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     UIUtil.getQuestionIcon()
                 )
                 if (languageConfirmed == Messages.NO) {
-                    return@ok false
-                }
-                if (data.module == Constant.dummyModule) {
-                    Messages.showWarningDialog(project, messageBundle.getString("module_not_select_warning"), uiBundle.getString("warning"))
                     return@ok false
                 }
                 if (data.sourceRoot == Constant.dummyFile) {
@@ -107,7 +106,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
 
             row(uiBundle.getString("label_module")) {
                 val renderer = SimpleListCellRenderer.create<Module> { label, value, _ -> label.text = value.name }
-                comboBox(CollectionComboBoxModel(modules), data::module, renderer)
+                comboBox(DefaultComboBoxModel(modules), data::module, renderer)
                         .constraints(CCFlags.growX)
                         .component.addItemListener {
                             if (it.stateChange == ItemEvent.SELECTED) {
@@ -120,11 +119,7 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
 
             row(uiBundle.getString("label_module_source")) {
                 val renderer = SimpleListCellRenderer.create<VirtualFile> { label, value, _ ->
-                    label.text = if (value is DummyVirtualFile) {
-                        value.name
-                    } else {
-                        (value as VirtualFile).path
-                    }
+                    label.text = value.path
                 }
                 comboBox(MutableCollectionComboBoxModel(sourceRoots), data::sourceRoot, renderer).constraints(CCFlags.growX)
             }
@@ -134,10 +129,6 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
                     val packageText = textField(data::`package`, 50).constraints(CCFlags.growX).component
                     button(uiBundle.getString("button_choose")) {
                         panel.apply()
-                        if (data.module == Constant.dummyModule) {
-                            Messages.showWarningDialog(project, messageBundle.getString("module_not_select_warning"), uiBundle.getString("warning"))
-                            return@button
-                        }
                         if (data.sourceRoot == Constant.dummyFile) {
                             Messages.showWarningDialog(project, messageBundle.getString("source_root_not_select_warning"), uiBundle.getString("warning"))
                             return@button
@@ -313,7 +304,6 @@ class Frame(private val project: Project, private val modules: List<Module>, pri
 
 data class FrameData(
     var language: Language = Language.JAVA,
-    var module: Module = Constant.dummyModule,
     var sourceRoot: VirtualFile = Constant.dummyFile,
     var `package`: String = "",
     var tablePrefix: String = "",
@@ -322,4 +312,6 @@ data class FrameData(
     var fieldSuffix: String = "",
     var entityPrefix: String = "",
     var entitySuffix: String = ""
-)
+) {
+    lateinit var module: Module
+}

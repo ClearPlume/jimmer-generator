@@ -21,7 +21,7 @@ import top.fallenangel.jimmergenerator.util.*
 class MainEntry : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
-        val modules = ModuleManager.getInstance(project).modules.toMutableList().apply { add(0, Constant.dummyModule) }
+        val modules = ModuleManager.getInstance(project).modules
         val dbTables = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)?.map { it as DbTable } ?: return
         val dbType = DBType.valueOf(dbTables[0].dataSource.dbms)
 
