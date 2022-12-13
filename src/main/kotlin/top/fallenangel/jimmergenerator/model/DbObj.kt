@@ -6,6 +6,7 @@ import com.intellij.database.model.ObjectKind
 import com.intellij.database.util.DasUtil
 import com.intellij.ui.CheckedTreeNode
 import icons.DatabaseIcons
+import top.fallenangel.jimmergenerator.component.SettingStorageComponent
 import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class
@@ -80,7 +81,7 @@ data class DbObj(
         }
 
         if (isTable) {
-            annotations.add(Annotation("Entity", Constant.jimmerPackage, emptyList()))
+            annotations.addAll(SettingStorageComponent.tableDefaultAnnotations)
         } else {
             if (isPrimary) {
                 annotations.add(Annotation("Id", Constant.jimmerPackage, emptyList()))
