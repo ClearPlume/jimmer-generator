@@ -200,7 +200,7 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
                 setTreeCellRenderer(
                     TreeCellRenderer { _, value, selected, _, _, _, _ ->
                         if (value !is DbObj) return@TreeCellRenderer JBLabel("")
-                        return@TreeCellRenderer JBLabel(value.name, value.icon, SwingConstants.LEADING).apply {
+                        return@TreeCellRenderer JBLabel(value.objName, value.icon, SwingConstants.LEADING).apply {
                             foreground = if (selected) JBColor.WHITE else JBColor.BLACK
                         }
                     }

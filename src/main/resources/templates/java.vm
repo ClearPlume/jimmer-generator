@@ -31,9 +31,15 @@ public interface $table.property extends ${table.property}Base {
 
 #macro(parseAnnotations $annotations)
     #foreach($annotation in $annotations)
-    @$annotation.name#if(!$annotation.parameters.empty)(#foreach($param in $annotation.parameters)
+    @$annotation.name#if(!$annotation.parameters.empty)(#if($annotation.parameters.size() == 1 && $annotation.parameters[0].anonymity)
+        #set($param = $annotation.parameters[0])
         #set($needQuote = $param.type.name == "String")
-        $param.name = #if($needQuote)"#end$param.value#if($needQuote)"#end#if($velocityHasNext), #end
+        #if($needQuote)"#end$param.value#if($needQuote)"#end
+    #else
+        #foreach($param in $annotation.parameters)
+            #set($needQuote = $param.type.name == "String")
+            $param.name = #if($needQuote)"#end$param.value#if($needQuote)"#end#if($velocityHasNext), #end
+        #end
     #end)#end
     #end
 #end

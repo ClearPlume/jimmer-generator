@@ -17,7 +17,7 @@ import javax.swing.Icon
 data class DbObj(
     val column: DasColumn?,
     var selected: Boolean,
-    val name: String,
+    val objName: String,
     var property: String,
     var businessKey: Boolean,
     var type: Class,
@@ -68,13 +68,13 @@ data class DbObj(
     fun captureAnnotations(language: Language, dbType: DBType) {
         annotations.clear()
         val nameAnnotation = if (isTable) "Table" else "Column"
-        val needNameAnnotation = name.replace("_", "").lowercase() != property.lowercase()
+        val needNameAnnotation = objName.replace("_", "").lowercase() != property.lowercase()
         if (needNameAnnotation) {
-            val needQuotes = name.contains(Regex("\\W|^\\d"))
+            val needQuotes = objName.contains(Regex("\\W|^\\d"))
             annotations.add(
                 Annotation(
                     nameAnnotation, Constant.jimmerPackage, listOf(
-                        Parameter("name", if (needQuotes) "${dbType.l}$name${dbType.r}" else name, Class("String"))
+                        Parameter("name", if (needQuotes) "${dbType.l}$objName${dbType.r}" else objName, Class("String"))
                     )
                 )
             )
@@ -101,7 +101,7 @@ data class DbObj(
         }
     }
 
-    override fun getName() = name
+    override fun getName() = objName
 
     override fun getKind(): ObjectKind {
         return if (isTable) {
