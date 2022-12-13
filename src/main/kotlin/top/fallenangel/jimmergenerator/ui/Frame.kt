@@ -60,7 +60,7 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
                 panel.apply()
                 val languageConfirmed = Messages.showYesNoDialog(
                     project,
-                    messageBundle.getString("confirm_current_language") + NameUtil.sneak2camel(data.language.name),
+                    messageBundle.getString("confirm_current_language") + data.language.name.sneak2camel(),
                     uiBundle.getString("tips"),
                     UIUtil.getQuestionIcon()
                 )
@@ -172,11 +172,11 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
                     panel.apply()
                     val tables = root.children().toList().map { it as DbObj }
                     tables.forEach { table ->
-                        val entityName = table.name.field2property(data.tablePrefix, data.tableSuffix)
+                        val entityName = table.field2property(data.tablePrefix, data.tableSuffix)
                         table.property = "${data.entityPrefix}$entityName${data.entitySuffix}"
                         table.type = Class("${data.entityPrefix}$entityName${data.entitySuffix}")
                         table.children.forEach {
-                            it.property = it.name.field2property(data.fieldPrefix, data.fieldSuffix, true)
+                            it.property = it.field2property(data.fieldPrefix, data.fieldSuffix, true)
                         }
                     }
                     tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)

@@ -1,6 +1,8 @@
 package top.fallenangel.jimmergenerator.model
 
 import com.intellij.database.model.DasColumn
+import com.intellij.database.model.DasNamed
+import com.intellij.database.model.ObjectKind
 import com.intellij.database.util.DasUtil
 import com.intellij.ui.CheckedTreeNode
 import icons.DatabaseIcons
@@ -20,7 +22,7 @@ data class DbObj(
     var type: Class,
     val annotations: MutableList<Annotation>,
     val remark: String?
-) : CheckedTreeNode() {
+) : CheckedTreeNode(), DasNamed {
     val isTable: Boolean
         get() = column == null
 
@@ -97,4 +99,16 @@ data class DbObj(
             }
         }
     }
+
+    override fun getName() = name
+
+    override fun getKind(): ObjectKind {
+        return if (isTable) {
+            ObjectKind.TABLE
+        } else {
+            ObjectKind.COLUMN
+        }
+    }
+
+    override fun isQuoted() = false
 }

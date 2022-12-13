@@ -33,8 +33,8 @@ class MainEntry : AnAction() {
             )
             DbObj(
                 null, true, it.name,
-                it.name.field2property(), false,
-                Class(it.name.field2property()),
+                it.field2property(), false,
+                Class(it.field2property()),
                 (SettingStorageComponent.tableDefaultAnnotations + tableAnnotation).toMutableList(),
                 it.comment
             ).also { table ->
@@ -43,7 +43,7 @@ class MainEntry : AnAction() {
                         .map { column ->
                             DbObj(
                                 column, true, column.name,
-                                column.name.field2property(uncapitalize = true), column.isBusinessKey,
+                                column.field2property(uncapitalize = true), column.isBusinessKey,
                                 column.captureType(Language.JAVA),
                                 column.captureAnnotations(Language.JAVA),
                                 column.comment
