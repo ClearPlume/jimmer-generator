@@ -81,6 +81,7 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
     private fun centerPanel() = panel {
         titledRow(uiBundle.getString("split_basic_setting")) {
             val sourceRoots = mutableListOf(Constant.dummyFile)
+            ModuleRootManager.getInstance(modules[0]).getSourceRoots(false).forEach { root -> sourceRoots.add(root) }
 
             row(uiBundle.getString("label_language")) {
                 cell {
