@@ -42,8 +42,6 @@ import javax.swing.tree.TreePath
 
 class Frame(private val project: Project, private val modules: Array<Module>, private val tables: List<DbObj>, private val dbType: DBType) {
     private val data = FrameData().apply { module = modules[0] }
-    private val uiBundle = Constant.uiBundle
-    private val messageBundle = Constant.messageBundle
 
     private val languageRef = Reference(Language.JAVA)
     private val root = CheckedTreeNode()
@@ -52,42 +50,42 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
 
     init {
         DialogConstructor(project).apply {
-            title = uiBundle.getString("dialog_title")
+            title = ui("dialog_title")
             centerPanel(panel)
 
-            okText(uiBundle.getString("button_ok"))
+            okText(ui("button_ok"))
             ok {
                 panel.apply()
                 val languageConfirmed = Messages.showYesNoDialog(
                     project,
-                    messageBundle.getString("confirm_current_language") + data.language.name.sneak2camel(),
-                    uiBundle.getString("tips"),
+                    message("confirm_current_language") + data.language.name.sneak2camel(),
+                    ui("tips"),
                     UIUtil.getQuestionIcon()
                 )
                 if (languageConfirmed == Messages.NO) {
                     return@ok false
                 }
                 if (data.sourceRoot == Constant.dummyFile) {
-                    Messages.showWarningDialog(project, messageBundle.getString("source_root_not_select_warning"), uiBundle.getString("warning"))
+                    Messages.showWarningDialog(project, message("source_root_not_select_warning"), ui("warning"))
                     return@ok false
                 }
                 return@ok generateCode()
             }
-            cancelText(uiBundle.getString("button_cancel"))
+            cancelText(ui("button_cancel"))
             exhibit()
         }
     }
 
     private fun centerPanel() = panel {
-        titledRow(uiBundle.getString("split_basic_setting")) {
+        titledRow(ui("split_basic_setting")) {
             val sourceRoots = mutableListOf(Constant.dummyFile)
             ModuleRootManager.getInstance(modules[0]).getSourceRoots(false).forEach { root -> sourceRoots.add(root) }
 
-            row(uiBundle.getString("label_language")) {
+            row(ui("label_language")) {
                 cell {
                     radioGroup(data::language) {
-                        radio(uiBundle.getString("radio_java"), Language.JAVA)
-                        radio(uiBundle.getString("radio_kotlin"), Language.KOTLIN)
+                        radio(ui("radio_java"), Language.JAVA)
+                        radio(ui("radio_kotlin"), Language.KOTLIN)
                                 .component
                                 .addItemListener {
                                     data.language = if (it.stateChange == ItemEvent.SELECTED) Language.KOTLIN else Language.JAVA
@@ -104,7 +102,7 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
                 }
             }
 
-            row(uiBundle.getString("label_module")) {
+            row(ui("label_module")) {
                 val renderer = SimpleListCellRenderer.create<Module> { label, value, _ -> label.text = value.name }
                 comboBox(DefaultComboBoxModel(modules), data::module, renderer)
                         .constraints(CCFlags.growX)
@@ -117,23 +115,23 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
                         }
             }
 
-            row(uiBundle.getString("label_module_source")) {
+            row(ui("label_module_source")) {
                 val renderer = SimpleListCellRenderer.create<VirtualFile> { label, value, _ ->
                     label.text = value.path
                 }
                 comboBox(MutableCollectionComboBoxModel(sourceRoots), data::sourceRoot, renderer).constraints(CCFlags.growX)
             }
 
-            row(uiBundle.getString("label_package")) {
+            row(ui("label_package")) {
                 cell(isFullWidth = true) {
                     val packageText = textField(data::`package`, 50).constraints(CCFlags.growX).component
-                    button(uiBundle.getString("button_choose")) {
+                    button(ui("button_choose")) {
                         panel.apply()
                         if (data.sourceRoot == Constant.dummyFile) {
-                            Messages.showWarningDialog(project, messageBundle.getString("source_root_not_select_warning"), uiBundle.getString("warning"))
+                            Messages.showWarningDialog(project, message("source_root_not_select_warning"), ui("warning"))
                             return@button
                         }
-                        val chooser = PackageChooserDialog(uiBundle.getString("dialog_title_package"), data.module)
+                        val chooser = PackageChooserDialog(ui("dialog_title_package"), data.module)
                         if (chooser.showAndGet()) {
                             packageText.text = chooser.selectedPackage.qualifiedName
                             data.`package` = chooser.selectedPackage.qualifiedName
@@ -143,32 +141,32 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
             }
         }
 
-        titledRow(uiBundle.getString("split_naming_setting")) {
+        titledRow(ui("split_naming_setting")) {
             row {
-                label(uiBundle.getString("label_remove_table_prefix"))
-                        .comment(uiBundle.getString("comment_split_naming"), -1)
+                label(ui("label_remove_table_prefix"))
+                        .comment(ui("comment_split_naming"), -1)
                 textField(data::tablePrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
-                label(uiBundle.getString("label_remove_table_suffix")).withLargeLeftGap()
+                label(ui("label_remove_table_suffix")).withLargeLeftGap()
                 textField(data::tableSuffix).growPolicy(GrowPolicy.MEDIUM_TEXT)
             }
             row {
-                label(uiBundle.getString("label_add_entity_prefix"))
+                label(ui("label_add_entity_prefix"))
                 textField(data::entityPrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
-                label(uiBundle.getString("label_add_entity_suffix")).withLargeLeftGap()
+                label(ui("label_add_entity_suffix")).withLargeLeftGap()
                 textField(data::entitySuffix).growPolicy(GrowPolicy.MEDIUM_TEXT)
             }
             row {
-                label(uiBundle.getString("label_remove_field_prefix"))
-                        .comment(uiBundle.getString("comment_split_naming"), -1)
+                label(ui("label_remove_field_prefix"))
+                        .comment(ui("comment_split_naming"), -1)
                 textField(data::fieldPrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
-                label(uiBundle.getString("label_remove_field_suffix")).withLargeLeftGap()
+                label(ui("label_remove_field_suffix")).withLargeLeftGap()
                 textField(data::fieldSuffix).growPolicy(GrowPolicy.MEDIUM_TEXT)
             }
             row {
-                button(uiBundle.getString("button_apply_naming_setting")) {
+                button(ui("button_apply_naming_setting")) {
                     panel.apply()
                     val tables = root.children().toList().map { it as DbObj }
                     tables.forEach { table ->
@@ -180,18 +178,18 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
                         }
                     }
                     tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
-                }.constraints(CCFlags.growX).comment(uiBundle.getString("comment_apply_naming_setting_button"), -1)
+                }.constraints(CCFlags.growX).comment(ui("comment_apply_naming_setting_button"), -1)
             }
         }
 
         row {
             val columns = arrayOf(
                 SelectedColumnInfo(tableRef, ""),
-                TreeColumnInfo(uiBundle.getString("column_obj_name")),
-                PropertyColumnInfo(tableRef, uiBundle.getString("column_property_name")),
-                TypeColumnInfo(languageRef, uiBundle.getString("column_property_type")),
-                BusinessKeyColumnInfo(uiBundle.getString("column_business_key")),
-                NullableColumnInfo(uiBundle.getString("column_nullable"))
+                TreeColumnInfo(ui("column_obj_name")),
+                PropertyColumnInfo(tableRef, ui("column_property_name")),
+                TypeColumnInfo(languageRef, ui("column_property_type")),
+                BusinessKeyColumnInfo(ui("column_business_key")),
+                NullableColumnInfo(ui("column_nullable"))
             )
             tables.forEach { root.add(it) }
             val tableModel = ListTreeTableModelOnColumns(root, columns)
@@ -212,7 +210,7 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
             tableRef.value.minimumSize = tableSize
             scrollPane(tableRef.value).apply {
                 component.minimumSize = tableSize
-                comment(uiBundle.getString("comment_split_table"), 120)
+                comment(ui("comment_split_table"), 120)
             }
         }
     }
@@ -257,7 +255,7 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
             val psiManager = PsiManager.getInstance(project)
             val selectVirtualPackage = LocalFileSystem.getInstance().findFileByPath(selectedPath)
             if (selectVirtualPackage == null) {
-                Messages.showWarningDialog(project, messageBundle.getString("save_path_not_exists"), uiBundle.getString("warning"))
+                Messages.showWarningDialog(project, message("save_path_not_exists"), ui("warning"))
                 return false
             }
             val classFile = WriteCommandAction.runWriteCommandAction(project, Computable {
@@ -297,7 +295,7 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
             writer.close()
             template.close()
         }
-        Messages.showInfoMessage(project, messageBundle.getString("entities_generate_success_info"), uiBundle.getString("tips"))
+        Messages.showInfoMessage(project, message("entities_generate_success_info"), ui("tips"))
         return true
     }
 }

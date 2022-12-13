@@ -14,3 +14,7 @@ object ResourceUtil {
         return reader.readText()
     }
 }
+
+fun message(key: String): String = Constant.messageBundle.getString(key)
+
+fun ui(key: String): String = Constant.uiBundle.getString(key)
