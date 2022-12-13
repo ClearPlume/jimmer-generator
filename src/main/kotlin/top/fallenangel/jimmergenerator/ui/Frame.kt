@@ -83,21 +83,19 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
 
             row(ui("label_language")) {
                 cell {
-                    radioGroup(data::language) {
+                    val languageChanged: (Language) -> Unit = {
+                        languageRef.value = it
+                        val tables = root.children().toList().map { table -> table as DbObj }
+                        tables.forEach { table ->
+                            table.children.forEach { column ->
+                                column.type = column.column!!.captureType(it)
+                            }
+                        }
+                        tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
+                    }
+                    radioGroup(data::language, languageChanged) {
                         radio(ui("radio_java"), Language.JAVA)
                         radio(ui("radio_kotlin"), Language.KOTLIN)
-                                .component
-                                .addItemListener {
-                                    data.language = if (it.stateChange == ItemEvent.SELECTED) Language.KOTLIN else Language.JAVA
-                                    languageRef.value = data.language
-                                    val tables = root.children().toList().map { table -> table as DbObj }
-                                    tables.forEach { table ->
-                                        table.children.forEach { column ->
-                                            column.type = column.column!!.captureType(data.language)
-                                        }
-                                    }
-                                    tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
-                                }
                     }
                 }
             }

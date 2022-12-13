@@ -6,11 +6,11 @@ import com.intellij.ui.layout.CellBuilder
 import java.awt.event.ItemEvent
 import kotlin.reflect.KMutableProperty
 
-fun <T> radioGroup(prop: KMutableProperty<T>, init: CellBuilderRadioGroup<T>.() -> Unit) {
-    CellBuilderRadioGroup(prop).init()
+fun <T> radioGroup(prop: KMutableProperty<T>, changed: (T) -> Unit = {}, init: CellBuilderRadioGroup<T>.() -> Unit) {
+    CellBuilderRadioGroup(prop, changed).init()
 }
 
-class CellBuilderRadioGroup<T>(private val prop: KMutableProperty<T>) {
+class CellBuilderRadioGroup<T>(private val prop: KMutableProperty<T>, private val changed: (T) -> Unit) {
     private val radios = mutableMapOf<T, JBRadioButton>()
 
     fun Cell.radio(text: String, value: T): CellBuilder<JBRadioButton> {
@@ -25,6 +25,7 @@ class CellBuilderRadioGroup<T>(private val prop: KMutableProperty<T>) {
                         radio.isSelected = v == value
                     }
                     prop.setter.call(value)
+                    changed(value)
                 }
             }
         }
