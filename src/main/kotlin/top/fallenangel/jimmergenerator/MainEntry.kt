@@ -9,8 +9,8 @@ import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.psi.PsiElement
 import top.fallenangel.jimmergenerator.component.SettingStorageComponent
+import top.fallenangel.jimmergenerator.enums.DBType
 import top.fallenangel.jimmergenerator.enums.Language
-import top.fallenangel.jimmergenerator.model.DBType
 import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class

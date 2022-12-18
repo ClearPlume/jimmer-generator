@@ -1,4 +1,4 @@
-package top.fallenangel.jimmergenerator.model
+package top.fallenangel.jimmergenerator.enums
 
 import com.intellij.database.Dbms
 

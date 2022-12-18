@@ -7,6 +7,8 @@ import com.intellij.database.util.DasUtil
 import com.intellij.ui.CheckedTreeNode
 import icons.DatabaseIcons
 import top.fallenangel.jimmergenerator.component.SettingStorageComponent
+import top.fallenangel.jimmergenerator.enums.DBType
+import top.fallenangel.jimmergenerator.enums.DbObjTrait
 import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class

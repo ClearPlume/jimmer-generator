@@ -1,4 +1,4 @@
-package top.fallenangel.jimmergenerator.model
+package top.fallenangel.jimmergenerator.enums
 
 enum class DbObjTrait {
     TABLE, PRIMARY, INDEX, FOREIGN, NOTNULL, COLUMN;

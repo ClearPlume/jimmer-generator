@@ -27,7 +27,7 @@ import com.intellij.util.ui.UIUtil
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import top.fallenangel.jimmergenerator.enums.Language
-import top.fallenangel.jimmergenerator.model.DBType
+import top.fallenangel.jimmergenerator.enums.DBType
 import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.table.*
