@@ -1,3 +1,11 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+val kotlinVersion by extra("1.7.21")
+val fastJsonVersion by extra("2.0.20")
+
+val sinceVersion by extra("203")
+val untilVersion by extra("223.*")
+
 plugins {
     id("org.jetbrains.intellij") version "1.10.1"
     id("java")
@@ -12,8 +20,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.21")
-    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.20")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    implementation("com.alibaba.fastjson2:fastjson2-kotlin:$fastJsonVersion")
 }
 
 // Configure Gradle IntelliJ Plugin
@@ -37,7 +45,7 @@ tasks {
         targetCompatibility = "11"
     }
 
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    withType<KotlinCompile> {
         kotlinOptions.apply {
             jvmTarget = "11"
             apiVersion = "1.7"
@@ -45,8 +53,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("203")
-        untilBuild.set("223.*")
+        sinceBuild.set(sinceVersion)
+        untilBuild.set(untilVersion)
     }
 
     runIde {
