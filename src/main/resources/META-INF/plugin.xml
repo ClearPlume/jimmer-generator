@@ -29,6 +29,14 @@
   ]]></description>
 
     <change-notes><![CDATA[
+    <p><b>0.3.1 (2022-12-21)</b></p>
+    <ul>
+        <li><b>(Bug Fix)</b>Two new column icons: (foreign key, non-null, index)(foreign key, index)</li>
+    </ul>
+    <ul>
+        <li><b>(修复bug)</b>新增两种列图标：(外键，非空，索引)(外键，索引)</li>
+    </ul>
+    <hr/>
     <p><b>0.3.0 (2022-12-11)</b></p>
     <ul>
         <li><b>(Feature)</b>Chinese</li>
