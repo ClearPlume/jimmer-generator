@@ -49,14 +49,18 @@ data class DbObj(
                 0b000001 -> DatabaseIcons.Table
                 // PRIMARY (INDEX + NOTNULL + COLUMN)
                 0b110110 -> DatabaseIcons.ColGoldKeyDotIndex
+                // FOREIGN + NOTNULL + INDEX (COLUMN)
+                0b111100 -> DatabaseIcons.ColBlueKeyDotIndex
+                // FOREIGN + NOTNULL (COLUMN)
+                0b111000 -> DatabaseIcons.ColBlueKeyDot
+                // FOREIGN + INDEX (COLUMN)
+                0b101100 -> DatabaseIcons.ColBlueKeyIndex
+                // FOREIGN (COLUMN)
+                0b101000 -> DatabaseIcons.ColBlueKey
                 // INDEX + NOTNULL (COLUMN)
                 0b110100 -> DatabaseIcons.ColDotIndex
                 // INDEX (COLUMN)
                 0b100100 -> DatabaseIcons.ColIndex
-                // FOREIGN + NOTNULL (COLUMN)
-                0b111000 -> DatabaseIcons.ColBlueKeyDot
-                // FOREIGN (COLUMN)
-                0b101000 -> DatabaseIcons.ColBlueKey
                 // NOTNULL (COLUMN)
                 0b110000 -> DatabaseIcons.ColDot
                 // COLUMN
