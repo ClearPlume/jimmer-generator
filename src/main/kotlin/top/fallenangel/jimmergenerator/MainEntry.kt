@@ -70,7 +70,7 @@ class MainEntry : AnAction() {
             if (it !is DbElement) {
                 return@all false
             }
-            it.typeName == "table" || it.typeName == "view"
+            it.typeName in arrayOf("table", "view", "表", "视图")
         }
     }
 }
