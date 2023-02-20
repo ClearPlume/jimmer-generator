@@ -29,12 +29,20 @@
   ]]></description>
 
     <change-notes><![CDATA[
-    <p><b>0.3.1 (2022-12-21)</b></p>
+    <p><b>0.3.2 (2023-02-20)</b></p>
     <ul>
-        <li><b>(Bug Fix)</b>Two new column icons: (foreign key, non-null, index)(foreign key, index)</li>
+        <li><b>(Bug Fix)</b>Menu &lt;Entity Classes Generator&gt; not shown when Chinese(Simplified) Language Pack was enabled</li>
     </ul>
     <ul>
-        <li><b>(修复bug)</b>新增两种列图标：(外键，非空，索引)(外键，索引)</li>
+        <li><b>(修复bug)</b>『Entity Classes Generator』菜单项在中文环境下不显示</li>
+    </ul>
+    <hr/>
+    <p><b>0.3.1 (2022-12-21)</b></p>
+    <ul>
+        <li><b>(Feature)</b>Two new column icons: (foreign key, non-null, index)(foreign key, index)</li>
+    </ul>
+    <ul>
+        <li><b>(新特性)</b>新增两种列图标：(外键，非空，索引)(外键，索引)</li>
     </ul>
     <hr/>
     <p><b>0.3.0 (2022-12-11)</b></p>
