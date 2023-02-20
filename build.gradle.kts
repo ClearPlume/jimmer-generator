@@ -6,6 +6,11 @@ val fastJsonVersion by extra("2.0.20")
 val sinceVersion by extra("203")
 val untilVersion by extra("223.*")
 
+val certificateChainValue: String by project
+val privateKeyValue: String by project
+val passwordValue: String by project
+val tokenValue: String by project
+
 plugins {
     id("org.jetbrains.intellij") version "1.10.1"
     id("java")
@@ -61,7 +66,14 @@ tasks {
         jvmArgs("-Xms128m", "-Xmx4096m", "-XX:ReservedCodeCacheSize=512m")
     }
 
+    signPlugin {
+        certificateChain.set(certificateChainValue)
+        privateKey.set(privateKeyValue)
+        password.set(passwordValue)
+    }
+
     publishPlugin {
         channels.add("Stable")
+        token.set(tokenValue)
     }
 }
