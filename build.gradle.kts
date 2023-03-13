@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlinVersion by extra("1.7.21")
-val fastJsonVersion by extra("2.0.20")
+val kotlinVersion by extra("1.8.0")
+val kotlinxSerializationVersion by extra("1.5.0")
 
 val sinceVersion by extra("203")
 val untilVersion by extra("223.*")
@@ -12,13 +12,14 @@ val passwordValue: String by project
 val tokenValue: String by project
 
 plugins {
-    id("org.jetbrains.intellij") version "1.10.1"
+    id("org.jetbrains.intellij") version "1.13.2"
     id("java")
-    kotlin("jvm") version "1.7.21"
+    kotlin("jvm") version "1.8.0"
+    kotlin("plugin.serialization") version "1.8.0"
 }
 
 group = "top.fallenangel"
-version = "0.3.2"
+version = "0.3.3"
 
 repositories {
     mavenCentral()
@@ -26,7 +27,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    implementation("com.alibaba.fastjson2:fastjson2-kotlin:$fastJsonVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
 }
 
 // Configure Gradle IntelliJ Plugin
@@ -53,7 +54,7 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions.apply {
             jvmTarget = "11"
-            apiVersion = "1.7"
+            apiVersion = "1.8"
         }
     }
 

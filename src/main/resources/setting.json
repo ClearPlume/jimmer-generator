@@ -7,13 +7,19 @@
       "kotlin": "Boolean"
     },
     {
+      "column": "^tinyint$",
+      "java": "Short",
+      "javaPrimitives": "byte",
+      "kotlin": "Byte"
+    },
+    {
       "column": "^int2$|^smallserial$|^smallint$",
       "java": "Short",
       "javaPrimitives": "short",
       "kotlin": "Short"
     },
     {
-      "column": "^int(\\(\\d+\\))?$|^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$|number",
+      "column": "^int$|^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$|^number$|^(tinyint|smallint|mediumint)(\\(\\d+\\))?( unsigned)?$",
       "java": "Integer",
       "javaPrimitives": "int",
       "kotlin": "Int"
@@ -31,7 +37,7 @@
       "kotlin": "Double"
     },
     {
-      "column": "^int8$|^serial8$|^bigserial$|^oid$|^bigint$",
+      "column": "^int8$|^serial8$|^bigserial$|^oid$|^bigint$|^int(\\(\\d+\\))? unsigned$",
       "java": "Long",
       "javaPrimitives": "long",
       "kotlin": "Long"
@@ -75,6 +81,11 @@
       "column": "^dec$|^decimal$|^numeric$",
       "java": "java.math.BigDecimal",
       "kotlin": "java.math.BigDecimal"
+    },
+    {
+      "column": "^bigint(\\(\\d+\\))?( unsigned)?$",
+      "java": "java.math.BigInteger",
+      "kotlin": "java.math.BigInteger"
     }
   ],
   "tableDefaultAnnotations": [

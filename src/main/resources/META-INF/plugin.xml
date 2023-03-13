@@ -29,6 +29,14 @@
   ]]></description>
 
     <change-notes><![CDATA[
+    <p><b>0.3.3 (2023-03-13)</b></p>
+    <ul>
+        <li><b>(Feature)</b>Added support for unsigned integer types in MySQL</li>
+    </ul>
+    <ul>
+        <li><b>(新特性)</b>新增针对MySQL的无符号整数类型支持</li>
+    </ul>
+    <hr/>
     <p><b>0.3.2 (2023-02-20)</b></p>
     <ul>
         <li><b>(Bug Fix)</b>Menu &lt;Entity Classes Generator&gt; not shown when Chinese(Simplified) Language Pack was enabled</li>

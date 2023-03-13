@@ -40,7 +40,7 @@ val DasColumn.isBusinessKey: Boolean
 fun DasColumn.captureType(language: Language): Class {
     val typeMappings = SettingStorageComponent.typeMappings
     for (typeMapping in typeMappings) {
-        if (Regex(typeMapping.column, RegexOption.IGNORE_CASE).matches(dataType.typeName)) {
+        if (Regex(typeMapping.column, RegexOption.IGNORE_CASE).matches(dataType.specification)) {
             return when (language) {
                 Language.JAVA -> {
                     if (DasUtil.isPrimary(this) && typeMapping.javaPrimitives != null) {
