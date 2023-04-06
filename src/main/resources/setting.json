@@ -19,7 +19,7 @@
       "kotlin": "Short"
     },
     {
-      "column": "^int$|^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$|^number$|^(tinyint|smallint|mediumint)(\\(\\d+\\))?( unsigned)?$",
+      "column": "^int(\\(\\d+\\))?$|^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$|^number$|^(tinyint|smallint|mediumint)(\\(\\d+\\))?( unsigned)?$",
       "java": "Integer",
       "javaPrimitives": "int",
       "kotlin": "Int"

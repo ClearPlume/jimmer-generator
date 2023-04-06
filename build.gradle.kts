@@ -4,7 +4,7 @@ val kotlinVersion by extra("1.8.0")
 val kotlinxSerializationVersion by extra("1.5.0")
 
 val sinceVersion by extra("203")
-val untilVersion by extra("223.*")
+val untilVersion by extra("231.*")
 
 val certificateChainValue: String by project
 val privateKeyValue: String by project
@@ -19,7 +19,7 @@ plugins {
 }
 
 group = "top.fallenangel"
-version = "0.3.3"
+version = "0.3.4"
 
 repositories {
     mavenCentral()
