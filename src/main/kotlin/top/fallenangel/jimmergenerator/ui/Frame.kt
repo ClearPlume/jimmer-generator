@@ -56,6 +56,10 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
             okText(ui("button_ok"))
             ok {
                 panel.apply()
+                if (tables.count { it.selected } == 0) {
+                    Messages.showWarningDialog(project, message("table_not_select_warning"), ui("warning"))
+                    return@ok false
+                }
                 val languageConfirmed = Messages.showYesNoDialog(
                     project,
                     message("confirm_current_language") + data.language.name.sneak2camel(),
@@ -220,13 +224,15 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
 
         // 保存选中的表
         val velocityEngine = VelocityEngine()
-        tables.forEach {
+        val selectedTables = tables.filter { it.selected }
+        selectedTables.forEach {
+            val selectedColumns = it.children.filter { column -> column.selected }
             // 计算实体和属性的注解列表
             it.captureAnnotations(data.language, dbType)
-            it.children.forEach { column -> column.captureAnnotations(data.language, dbType) }
+            selectedColumns.forEach { column -> column.captureAnnotations(data.language, dbType) }
 
             // 计算每张表的注解导包列表
-            val tableAnnotations = it.annotations + it.children.map { column -> column.annotations }.flatten()
+            val tableAnnotations = it.annotations + selectedColumns.map { column -> column.annotations }.flatten()
             val annotationImports = tableAnnotations.map { annotation -> annotation.import }
             val parameterImports = tableAnnotations.map { annotation -> annotation.parameters }
                     .flatten()
@@ -234,7 +240,7 @@ class Frame(private val project: Project, private val modules: Array<Module>, pr
                     .map { param -> param.type.import }
 
             // 计算每张表的类型导包列表
-            val fieldImports = it.children
+            val fieldImports = selectedColumns
                     .map { field -> field.type }
                     .filter { type -> type.`package`.isNotBlank() }
                     .map { type -> type.import }

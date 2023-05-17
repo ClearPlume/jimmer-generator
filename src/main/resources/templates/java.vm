@@ -16,16 +16,18 @@ import $import;
 #parseAnnotations($table.annotations)
 public interface $table.property extends ${table.property}Base {
 #foreach($field in $table.children)
-    #if($velocityCount != 1)
+    #if($field.selected)
+        #if($velocityCount != 1)
 
+        #end
+        #if($field.remark)
+        /**
+        * $field.remark
+        */
+        #end
+        #parseAnnotations($field.annotations)
+        $field.type.name ${field.property}();
     #end
-    #if($field.remark)
-    /**
-    * $field.remark
-    */
-    #end
-    #parseAnnotations($field.annotations)
-    $field.type.name ${field.property}();
 #end
 }
 
