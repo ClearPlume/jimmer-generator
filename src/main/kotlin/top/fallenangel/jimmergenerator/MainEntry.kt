@@ -12,6 +12,7 @@ import top.fallenangel.jimmergenerator.component.SettingStorageComponent
 import top.fallenangel.jimmergenerator.enums.DBType
 import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.model.DbObj
+import top.fallenangel.jimmergenerator.model.Context
 import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.model.type.Parameter
@@ -24,6 +25,9 @@ class MainEntry : AnAction() {
         val modules = ModuleManager.getInstance(project).modules
         val dbTables = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)?.map { it as DbTable } ?: return
         val dbType = DBType.valueOf(dbTables[0].dataSource.dbms)
+
+        Context.project = project
+        Context.dbType = dbType
 
         val tables = dbTables.map {
             val tableAnnotation = Annotation(
@@ -51,7 +55,7 @@ class MainEntry : AnAction() {
                         }
             }
         }
-        Frame(project, modules, tables, dbType)
+        Frame(modules, tables)
     }
 
     /**
