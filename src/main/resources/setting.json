@@ -19,7 +19,7 @@
       "kotlin": "Short"
     },
     {
-      "column": "^int(\\(\\d+\\))?$|^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$|^number$|^(tinyint|smallint|mediumint)(\\(\\d+\\))?( unsigned)?$",
+      "column": "^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$^(tinyint|smallint|mediumint)(\\(\\d+\\))?( unsigned)?$",
       "java": "Integer",
       "javaPrimitives": "int",
       "kotlin": "Int"
@@ -37,7 +37,7 @@
       "kotlin": "Double"
     },
     {
-      "column": "^int8$|^serial8$|^bigserial$|^oid$|^bigint$|^int(\\(\\d+\\))? unsigned$",
+      "column": "^int8$|^serial8$|^bigserial$|^oid$|^bigint$|^int(\\(\\d+\\))? unsigned$|^number(\\((?:\\d+|\\*)\\))?$",
       "java": "Long",
       "javaPrimitives": "long",
       "kotlin": "Long"
@@ -68,7 +68,7 @@
       "kotlin": "java.time.OffsetTime"
     },
     {
-      "column": "^datetime$|^timestamp$",
+      "column": "^datetime$|^timestamp(\\(\\d+\\))?$",
       "java": "java.time.LocalDateTime",
       "kotlin": "java.time.LocalDateTime"
     },
