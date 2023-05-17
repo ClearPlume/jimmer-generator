@@ -9,8 +9,7 @@ fun String.sneak2camel(uncapitalize: Boolean = false): String {
     val camel = lowercase()
             .split(Regex("[^a-zA-Z\\d]"))
             .filter { it.isNotBlank() }
-            .map { it.capitalize() }
-            .joinToString("") { it }
+            .joinToString("") { it.capitalize() }
     return if (uncapitalize) {
         camel.uncapitalize()
     } else {
