@@ -69,7 +69,7 @@ data class DbObj(
         }
 
     val children: List<DbObj>
-        get() = if (isTable) children.map { it as DbObj } else emptyList()
+        get() = if (isTable) super.children.map { it as DbObj } else emptyList()
 
     fun captureAnnotations(language: Language, dbType: DBType) {
         annotations.clear()
@@ -105,6 +105,7 @@ data class DbObj(
                 annotations.add(Annotation("Key", Constant.jimmerPackage, emptyList()))
             }
         }
+        annotations.sortBy { it.toString().length }
     }
 
     override fun getName() = objName
