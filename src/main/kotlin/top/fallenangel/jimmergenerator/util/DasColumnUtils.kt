@@ -18,8 +18,8 @@ import top.fallenangel.jimmergenerator.model.type.Parameter
  */
 fun DasNamed.field2property(prefix: String = "", suffix: String = "", uncapitalize: Boolean = false): String {
     var property = name.lowercase()
-    property = property.replaceFirst(Regex("^$prefix", RegexOption.IGNORE_CASE), "")
-    property = property.replaceFirst(Regex("$suffix$", RegexOption.IGNORE_CASE), "")
+    property = property.replaceFirst(Regex("^${prefix}_?", RegexOption.IGNORE_CASE), "")
+    property = property.replaceFirst(Regex("_?$suffix$", RegexOption.IGNORE_CASE), "")
     return property.sneak2camel(uncapitalize)
 }
 
