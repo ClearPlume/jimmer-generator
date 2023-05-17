@@ -20,9 +20,9 @@ import com.intellij.ui.treeStructure.treetable.TreeColumnInfo
 import com.intellij.util.ui.UIUtil
 import top.fallenangel.jimmergenerator.enums.Language
 import top.fallenangel.jimmergenerator.logic.CodeGenerator
+import top.fallenangel.jimmergenerator.model.Context.Companion.project
 import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.FrameData
-import top.fallenangel.jimmergenerator.model.Context.project
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.table.*
 import top.fallenangel.jimmergenerator.util.*

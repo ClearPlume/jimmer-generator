@@ -9,8 +9,8 @@ import com.intellij.psi.PsiManager
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import top.fallenangel.jimmergenerator.model.DbObj
-import top.fallenangel.jimmergenerator.model.Context.dbType
-import top.fallenangel.jimmergenerator.model.Context.project
+import top.fallenangel.jimmergenerator.model.Context.Companion.dbType
+import top.fallenangel.jimmergenerator.model.Context.Companion.project
 import top.fallenangel.jimmergenerator.model.FrameData
 import top.fallenangel.jimmergenerator.util.ResourceUtil
 import top.fallenangel.jimmergenerator.util.message

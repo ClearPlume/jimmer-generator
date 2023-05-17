@@ -26,8 +26,8 @@ class MainEntry : AnAction() {
         val dbTables = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)?.map { it as DbTable } ?: return
         val dbType = DBType.valueOf(dbTables[0].dataSource.dbms)
 
-        Context.project = project
-        Context.dbType = dbType
+        Context.setProject(project)
+        Context.setDbType(dbType)
 
         val tables = dbTables.map {
             val tableAnnotation = Annotation(
