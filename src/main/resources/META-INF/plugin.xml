@@ -29,6 +29,30 @@
   ]]></description>
 
     <change-notes><![CDATA[
+    <p><b>0.3.5 (2023-04-06)</b></p>
+    <ul>
+        <li><b>(Bug Fix)</b>Fix removing table/column name prefixes/suffixes, exceptions when they're the same</li>
+        <li><b>(Bug Fix)</b>Fix removing table/column name prefixes/suffixes, if joined by underscores, they can't be properly removed</li>
+        <li><b>(Bug Fix)</b>The selected or unselected state of the select checkboxes for tables and fields does not take effect</li>
+        <li><b>(Feature)</b>Added support for Oracle timestamp and number types</li>
+        <li><b>(Feature)</b>Multiple annotations of the same class and fields, sorted by their length</li>
+    </ul>
+    <ul>
+        <li><b>(修复bug)</b>修复去除表/列名称前缀/后缀时，前缀/后缀与表/列名称相同导致的异常</li>
+        <li><b>(修复bug)</b>修复去除表/列名称前缀/后缀时，如果它们以下划线连接，则无法正确移除</li>
+        <li><b>(修复bug)</b>表、字段的select复选框选择或取消选择状态无效</li>
+        <li><b>(新特性)</b>新增对Oracle timestamp、number类型的支持</li>
+        <li><b>(新特性)</b>同一个类、字段的多个注解，按照其长度排序</li>
+    </ul>
+    <hr/>
+    <p><b>0.3.4 (2023-04-06)</b></p>
+    <ul>
+        <li><b>(Feature)</b>Support 2023.*</li>
+    </ul>
+    <ul>
+        <li><b>(新特性)</b>支持2023.*</li>
+    </ul>
+    <hr/>
     <p><b>0.3.3 (2023-03-13)</b></p>
     <ul>
         <li><b>(Feature)</b>Added support for unsigned integer types in MySQL</li>
