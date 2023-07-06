@@ -6,10 +6,10 @@ val kotlinxSerializationVersion by extra("1.5.0")
 val sinceVersion by extra("203")
 val untilVersion by extra("231.*")
 
-val certificateChainValue: String by project
-val privateKeyValue: String by project
-val passwordValue: String by project
-val tokenValue: String by project
+val certificateChainValue: String = findProperty("certificateChainValue") as String
+val privateKeyValue: String = findProperty("privateKeyValue") as String
+val passwordValue: String = findProperty("passwordValue") as String
+val tokenValue: String = findProperty("tokenValue") as String
 
 plugins {
     id("org.jetbrains.intellij") version "1.13.2"
