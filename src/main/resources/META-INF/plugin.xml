@@ -29,6 +29,14 @@
   ]]></description>
 
     <change-notes><![CDATA[
+    <p><b>0.3.6 (2023-07-17)</b></p>
+    <ul>
+        <li><b>(Feature)</b>Remove <Generate BaseEntity for all entities></li>
+    </ul>
+    <ul>
+        <li><b>(新特性)</b>移除『为所有实体生成BaseEntity』</li>
+    </ul>
+    <hr/>
     <p><b>0.3.5 (2023-04-06)</b></p>
     <ul>
         <li><b>(Bug Fix)</b>Fix removing table/column name prefixes/suffixes, exceptions when they're the same</li>

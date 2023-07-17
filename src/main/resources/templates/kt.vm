@@ -14,7 +14,7 @@ import $import
 */
 #end
 #parseAnnotations($table.annotations)
-interface $table.property : ${table.property}Base {
+interface $table.property {
 #foreach($field in $table.children)
     #if($field.selected)
         #if($velocityCount != 1)

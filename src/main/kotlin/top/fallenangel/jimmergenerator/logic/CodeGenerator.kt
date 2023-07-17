@@ -8,9 +8,9 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiManager
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
-import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.Context.Companion.dbType
 import top.fallenangel.jimmergenerator.model.Context.Companion.project
+import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.FrameData
 import top.fallenangel.jimmergenerator.util.ResourceUtil
 import top.fallenangel.jimmergenerator.util.message
@@ -74,28 +74,6 @@ class CodeGenerator(private val data: FrameData, private val tables: List<DbObj>
             })
             psiManager.findFile(classFile)?.apply {
                 ReformatCodeProcessor(project, this, null, false).run()
-            }
-
-            val baseTableEntityFileName = "${tableEntityName}Base.$fileExt"
-            selectVirtualPackage.findChild(baseTableEntityFileName) ?: run {
-                val baseWriter = StringWriter()
-                val baseVelocityContext = VelocityContext().apply {
-                    put("package", selectedPackage)
-                    put("table", it)
-                }
-                val baseTemplate = InputStreamReader(ResourceUtil.getResourceAsStream("/templates/$fileExt-base.vm"))
-                velocityEngine.evaluate(baseVelocityContext, baseWriter, "Velocity Code Generate Base", baseTemplate)
-                val baseClassFile = WriteCommandAction.runWriteCommandAction(project, Computable {
-                    selectVirtualPackage.createChildData(project, baseTableEntityFileName).apply {
-                        setBinaryContent(baseWriter.toString().toByteArray())
-                    }
-                })
-                psiManager.findFile(baseClassFile)?.apply {
-                    ReformatCodeProcessor(project, this, null, false).run()
-                }
-
-                baseWriter.close()
-                baseTemplate.close()
             }
 
             writer.close()
