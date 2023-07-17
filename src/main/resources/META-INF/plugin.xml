@@ -31,7 +31,7 @@
     <change-notes><![CDATA[
     <p><b>0.3.6 (2023-07-17)</b></p>
     <ul>
-        <li><b>(Feature)</b>Remove <Generate BaseEntity for all entities></li>
+        <li><b>(Feature)</b>Remove &lt;Generate BaseEntity for all entities&gt;</li>
     </ul>
     <ul>
         <li><b>(新特性)</b>移除『为所有实体生成BaseEntity』</li>
