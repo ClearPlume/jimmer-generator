@@ -24,6 +24,7 @@ import top.fallenangel.jimmergenerator.model.Context.Companion.project
 import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.FrameData
 import top.fallenangel.jimmergenerator.model.type.Class
+import top.fallenangel.jimmergenerator.ui.components.radioGroup
 import top.fallenangel.jimmergenerator.ui.table.*
 import top.fallenangel.jimmergenerator.util.*
 import java.awt.event.ItemEvent
@@ -77,26 +78,28 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
             val sourceRoots = mutableListOf(Constant.dummyFile)
             ModuleRootManager.getInstance(modules[0]).getSourceRoots(false).forEach { root -> sourceRoots.add(root) }
 
-            row(ui("label_language")) {
-                cell {
-                    val languageChanged: (Language) -> Unit = {
-                        languageRef.value = it
-                        val tables = root.children().toList().map { table -> table as DbObj }
-                        tables.forEach { table ->
-                            table.children.forEach { column ->
-                                column.type = column.column!!.captureType(it)
-                            }
+            row {
+                // 语言选择单选框
+                label(ui("label_language"))
+                val languageChanged: (Language) -> Unit = {
+                    languageRef.value = it
+                    val tables = root.children().toList().map { table -> table as DbObj }
+                    tables.forEach { table ->
+                        table.children.forEach { column ->
+                            column.type = column.column!!.captureType(it)
                         }
-                        tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
                     }
-                    radioGroup(data::language, languageChanged) {
+                    tableRef.value.tableModel.valueForPathChanged(TreePath(root.path), null)
+                }
+                radioGroup(data::language, languageChanged) {
+                    cell {
                         radio(ui("radio_java"), Language.JAVA)
                         radio(ui("radio_kotlin"), Language.KOTLIN)
                     }
                 }
-            }
 
-            row(ui("label_module")) {
+                // 模块选择下拉框
+                label(ui("label_module")).withLargeLeftGap()
                 val renderer = SimpleListCellRenderer.create<Module> { label, value, _ -> label.text = value.name }
                 comboBox(DefaultComboBoxModel(modules), data::module, renderer)
                         .constraints(CCFlags.growX)
@@ -109,27 +112,28 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
                         }
             }
 
-            row(ui("label_module_source")) {
+            row {
+                // Source选择下拉框
+                label(ui("label_module_source"))
                 val renderer = SimpleListCellRenderer.create<VirtualFile> { label, value, _ ->
                     label.text = value.path
+                    label.toolTipText = value.path
                 }
-                comboBox(MutableCollectionComboBoxModel(sourceRoots), data::sourceRoot, renderer).constraints(CCFlags.growX)
-            }
+                comboBox(MutableCollectionComboBoxModel(sourceRoots), data::sourceRoot, renderer).constraints(CCFlags.growX).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
-            row(ui("label_package")) {
-                cell(isFullWidth = true) {
-                    val packageText = textField(data::`package`, 50).constraints(CCFlags.growX).component
-                    button(ui("button_choose")) {
-                        panel.apply()
-                        if (data.sourceRoot == Constant.dummyFile) {
-                            Messages.showWarningDialog(project, message("source_root_not_select_warning"), ui("warning"))
-                            return@button
-                        }
-                        val chooser = PackageChooserDialog(ui("dialog_title_package"), data.module)
-                        if (chooser.showAndGet()) {
-                            packageText.text = chooser.selectedPackage.qualifiedName
-                            data.`package` = chooser.selectedPackage.qualifiedName
-                        }
+                // 包选择弹窗
+                label(ui("label_package")).withLargeLeftGap()
+                val packageText = textField(data::`package`, 25).constraints(CCFlags.growX).component
+                button(ui("button_choose")) {
+                    panel.apply()
+                    if (data.sourceRoot == Constant.dummyFile) {
+                        Messages.showWarningDialog(project, message("source_root_not_select_warning"), ui("warning"))
+                        return@button
+                    }
+                    val chooser = PackageChooserDialog(ui("dialog_title_package"), data.module)
+                    if (chooser.showAndGet()) {
+                        packageText.text = chooser.selectedPackage.qualifiedName
+                        data.`package` = chooser.selectedPackage.qualifiedName
                     }
                 }
             }
@@ -137,8 +141,7 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
 
         titledRow(ui("split_naming_setting")) {
             row {
-                label(ui("label_remove_table_prefix"))
-                        .comment(ui("comment_split_naming"), -1)
+                label(ui("label_remove_table_prefix")).comment(ui("comment_split_naming"), -1)
                 textField(data::tablePrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
                 label(ui("label_remove_table_suffix")).withLargeLeftGap()
@@ -149,15 +152,14 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
                 textField(data::entityPrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
                 label(ui("label_add_entity_suffix")).withLargeLeftGap()
-                textField(data::entitySuffix).growPolicy(GrowPolicy.MEDIUM_TEXT)
+                textField(data::entitySuffix)
             }
             row {
-                label(ui("label_remove_field_prefix"))
-                        .comment(ui("comment_split_naming"), -1)
+                label(ui("label_remove_field_prefix")).comment(ui("comment_split_naming"), -1)
                 textField(data::fieldPrefix).growPolicy(GrowPolicy.MEDIUM_TEXT)
 
                 label(ui("label_remove_field_suffix")).withLargeLeftGap()
-                textField(data::fieldSuffix).growPolicy(GrowPolicy.MEDIUM_TEXT)
+                textField(data::fieldSuffix)
             }
             row {
                 button(ui("button_apply_naming_setting")) {
@@ -200,7 +202,7 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
             }
             // 设置表格最小尺寸
             val tableSize = tableRef.value.preferredScrollableViewportSize
-            tableSize.height = tableSize.height + 200
+            tableSize.height += 200
             tableRef.value.minimumSize = tableSize
             scrollPane(tableRef.value).apply {
                 component.minimumSize = tableSize
