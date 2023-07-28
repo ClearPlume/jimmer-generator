@@ -25,10 +25,12 @@ import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.FrameData
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.components.radioGroup
+import top.fallenangel.jimmergenerator.ui.components.tabbedPanel
 import top.fallenangel.jimmergenerator.ui.table.*
 import top.fallenangel.jimmergenerator.util.*
 import java.awt.event.ItemEvent
 import javax.swing.DefaultComboBoxModel
+import javax.swing.JLabel
 import javax.swing.SwingConstants
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreePath
@@ -74,6 +76,14 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
     }
 
     private fun centerPanel() = panel {
+        row {
+            tabbedPanel {
+                repeat(10) {
+                    tab("Tab #$it$it") { JLabel("Label #$it$it", SwingConstants.CENTER) }
+                }
+            }
+        }
+
         titledRow(ui("split_basic_setting")) {
             val sourceRoots = mutableListOf(Constant.dummyFile)
             ModuleRootManager.getInstance(modules[0]).getSourceRoots(false).forEach { root -> sourceRoots.add(root) }
