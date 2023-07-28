@@ -157,7 +157,6 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="top.fallenangel.jimmergenerator.component.SettingStorageComponent"/>
     </extensions>
 
     <actions>

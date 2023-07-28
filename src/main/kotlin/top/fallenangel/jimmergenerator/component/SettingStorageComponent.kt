@@ -1,6 +1,7 @@
 package top.fallenangel.jimmergenerator.component
 
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.ProjectManager
@@ -8,6 +9,7 @@ import top.fallenangel.jimmergenerator.model.setting.SettingStorage
 import top.fallenangel.jimmergenerator.util.JSON
 import top.fallenangel.jimmergenerator.util.ResourceUtil
 
+@Service(Service.Level.PROJECT)
 @State(name = "JimmerGeneratorSetting", storages = [Storage("jimmer-generator-setting.xml")])
 class SettingStorageComponent : PersistentStateComponent<SettingStorage> {
     private var settingStorage: SettingStorage
