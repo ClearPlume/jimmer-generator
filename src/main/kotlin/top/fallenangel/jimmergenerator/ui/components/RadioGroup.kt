@@ -1,4 +1,4 @@
-package top.fallenangel.jimmergenerator.ui
+package top.fallenangel.jimmergenerator.ui.components
 
 import com.intellij.ui.components.JBRadioButton
 import com.intellij.ui.layout.Cell
@@ -6,11 +6,11 @@ import com.intellij.ui.layout.CellBuilder
 import java.awt.event.ItemEvent
 import kotlin.reflect.KMutableProperty
 
-fun <T> radioGroup(prop: KMutableProperty<T>, changed: (T) -> Unit = {}, init: CellBuilderRadioGroup<T>.() -> Unit) {
-    CellBuilderRadioGroup(prop, changed).init()
+fun <T> radioGroup(prop: KMutableProperty<T>, changed: (T) -> Unit = {}, init: RadioGroup<T>.() -> Unit) {
+    RadioGroup(prop, changed).init()
 }
 
-class CellBuilderRadioGroup<T>(private val prop: KMutableProperty<T>, private val changed: (T) -> Unit) {
+class RadioGroup<T>(private val prop: KMutableProperty<T>, private val changed: (T) -> Unit) {
     private val radios = mutableMapOf<T, JBRadioButton>()
 
     fun Cell.radio(text: String, value: T): CellBuilder<JBRadioButton> {
