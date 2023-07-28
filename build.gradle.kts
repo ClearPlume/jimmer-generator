@@ -4,7 +4,7 @@ val kotlinVersion by extra("1.8.20")
 val jacksonVersion by extra("2.15.2")
 
 val sinceVersion by extra("203")
-val untilVersion by extra("231.*")
+val untilVersion by extra("232.*")
 
 val certificateChainValue: String = findProperty("certificateChainValue") as String
 val privateKeyValue: String = findProperty("privateKeyValue") as String
@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "top.fallenangel"
-version = "0.3.6"
+version = "0.3.7"
 
 repositories {
     mavenCentral()
