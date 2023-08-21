@@ -25,12 +25,10 @@ import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.FrameData
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.ui.components.radioGroup
-import top.fallenangel.jimmergenerator.ui.components.tabbedPanel
 import top.fallenangel.jimmergenerator.ui.table.*
 import top.fallenangel.jimmergenerator.util.*
 import java.awt.event.ItemEvent
 import javax.swing.DefaultComboBoxModel
-import javax.swing.JLabel
 import javax.swing.SwingConstants
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreePath
@@ -76,14 +74,15 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
     }
 
     private fun centerPanel() = panel {
-        row {
-            tabbedPanel {
-                repeat(10) {
-                    tab("Tab #$it$it") { JLabel("Label #$it$it", SwingConstants.CENTER) }
-                }
-            }
-        }
+        // row {
+        //     tabbedPanel {
+        //         repeat(10) {
+        //             tab("Tab #$it$it") { JLabel("Label #$it$it", SwingConstants.CENTER) }
+        //         }
+        //     }
+        // }
 
+        // 基本设置块
         titledRow(ui("split_basic_setting")) {
             val sourceRoots = mutableListOf(Constant.dummyFile)
             ModuleRootManager.getInstance(modules[0]).getSourceRoots(false).forEach { root -> sourceRoots.add(root) }
@@ -149,6 +148,7 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
             }
         }
 
+        // 命名设置块
         titledRow(ui("split_naming_setting")) {
             row {
                 label(ui("label_remove_table_prefix")).comment(ui("comment_split_naming"), -1)
@@ -188,6 +188,7 @@ class Frame(private val modules: Array<Module>, private val tables: List<DbObj>)
             }
         }
 
+        // 实体信息设置表格
         row {
             val columns = arrayOf(
                 SelectedColumnInfo(tableRef, ""),

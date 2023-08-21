@@ -29,6 +29,16 @@
   ]]></description>
 
     <change-notes><![CDATA[
+    <p><b>0.3.7 (2023-08-21)</b></p>
+    <ul>
+        <li><b>(Feature)</b>UI layout adjustment</li>
+        <li><b>(Feature)</b>Support 2023.2.*</li>
+    </ul>
+    <ul>
+        <li><b>(新特性)</b>UI布局调整</li>
+        <li><b>(新特性)</b>支持2023.2.*</li>
+    </ul>
+    <hr/>
     <p><b>0.3.6 (2023-07-17)</b></p>
     <ul>
         <li><b>(Feature)</b>Remove &lt;Generate BaseEntity for all entities&gt;</li>
