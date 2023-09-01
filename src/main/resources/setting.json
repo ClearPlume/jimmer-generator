@@ -19,7 +19,7 @@
       "kotlin": "Short"
     },
     {
-      "column": "^integer(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$^(tinyint|smallint|mediumint)(\\(\\d+\\))?( unsigned)?$",
+      "column": "^(integer|int)(\\(\\d+\\))?$|^int4$|^serial$|^bit\\((\\d+)\\)$^(tinyint|smallint|mediumint)(\\(\\d+\\))?( unsigned)?$",
       "java": "Integer",
       "javaPrimitives": "int",
       "kotlin": "Int"
@@ -78,7 +78,7 @@
       "kotlin": "java.time.OffsetDateTime"
     },
     {
-      "column": "^dec$|^decimal$|^numeric$",
+      "column": "^dec(\\(\\d+\\))?$|^decimal(\\(\\d+\\))?$|^numeric(\\(\\d+\\))?$",
       "java": "java.math.BigDecimal",
       "kotlin": "java.math.BigDecimal"
     },
