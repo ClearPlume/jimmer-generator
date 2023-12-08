@@ -29,6 +29,14 @@
   ]]></description>
 
     <change-notes><![CDATA[
+    <p><b>0.3.9 (2023-12-08)</b></p>
+    <ul>
+        <li><b>(Feature)</b>Support 2023.3.*</li>
+    </ul>
+    <ul>
+        <li><b>(新特性)</b>支持2023.3.*</li>
+    </ul>
+    <hr/>
     <p><b>0.3.8 (2023-09-01)</b></p>
     <ul>
         <li><b>(Bug Fix)</b>Add support for two data types "int" and "decimal"</li>
