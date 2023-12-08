@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val kotlinVersion by extra("1.8.20")
 val jacksonVersion by extra("2.15.2")
 
-val sinceVersion by extra("203")
+val sinceVersion by extra("221.5080.210")
 val untilVersion by extra("232.*")
 
 val certificateChainValue: String = findProperty("certificateChainValue") as String
@@ -34,7 +34,7 @@ dependencies {
 intellij {
     pluginName.set("JimmerGenerator")
     type.set("IU") // Target IDE Platform
-    version.set("2020.3.4")
+    version.set("2022.1")
     plugins.set(
         listOf(
             "com.intellij.java",
