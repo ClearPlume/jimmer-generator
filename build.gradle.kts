@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val kotlinVersion by extra("1.8.20")
 val jacksonVersion by extra("2.15.2")
 
-val sinceVersion by extra("221.5080.210")
-val untilVersion by extra("241.*")
+val sinceVersion by extra("223.7571.182")
+val untilVersion by extra("243.*")
 
 val certificateChainValue: String = findProperty("certificateChainValue") as String
 val privateKeyValue: String = findProperty("privateKeyValue") as String
@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "top.fallenangel"
-version = "0.3.10"
+version = "0.3.11"
 
 repositories {
     mavenCentral()
@@ -34,7 +34,7 @@ dependencies {
 intellij {
     pluginName.set("JimmerGenerator")
     type.set("IU") // Target IDE Platform
-    version.set("2022.1")
+    version.set("2022.3")
     plugins.set(
         listOf(
             "com.intellij.java",
@@ -46,13 +46,13 @@ intellij {
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
     }
 
     withType<KotlinCompile> {
         kotlinOptions.apply {
-            jvmTarget = "11"
+            jvmTarget = "17"
             apiVersion = "1.8"
         }
     }
