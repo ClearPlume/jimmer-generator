@@ -37,7 +37,7 @@ repositories {
 dependencies {
     intellijPlatform {
         create("IU", sinceVersion, false)
-        bundledPlugins("com.intellij.database")
+        bundledPlugins("com.intellij.java", "com.intellij.database")
 
         testFramework(TestFrameworkType.Platform)
     }
@@ -62,7 +62,8 @@ changelog {
     keepUnreleasedSection = false
     unreleasedTerm = "Unreleased"
     groups = listOf("Added", "Changed", "Deprecated", "Removed", "Fixed")
-    headerParserRegex = """^((0|[1-9]\d*)(\.(0|[1-9]\d*)){2,3}(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}"""
+    headerParserRegex =
+        """^((0|[1-9]\d*)(\.(0|[1-9]\d*)){2,3}(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}"""
 }
 
 intellijPlatform {
