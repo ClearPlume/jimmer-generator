@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## [0.3.13] - 2025-03-22
+
+### Changed
+
+* [#6](https://github.com/ClearPlume/jimmer-generator/issues/6): kotlin ui dsl -> kotlin ui dsl2
+
+### Fixed
+
+* [#5](https://github.com/ClearPlume/jimmer-generator/issues/5): MainEntry#getActionUpdateThread
+
 ## [0.3.12] - 2024-11-14
 
 ### Added
