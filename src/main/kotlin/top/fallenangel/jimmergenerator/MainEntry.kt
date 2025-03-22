@@ -3,6 +3,7 @@ package top.fallenangel.jimmergenerator
 import com.intellij.database.psi.DbElement
 import com.intellij.database.psi.DbTable
 import com.intellij.database.util.DasUtil
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
@@ -67,6 +68,8 @@ class MainEntry : AnAction() {
         val selected = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)
         event.presentation.isVisible = selected.shouldShowMainEntry()
     }
+
+    override fun getActionUpdateThread() = ActionUpdateThread.BGT
 
     private fun Array<PsiElement>?.shouldShowMainEntry(): Boolean {
         if (this == null) {
