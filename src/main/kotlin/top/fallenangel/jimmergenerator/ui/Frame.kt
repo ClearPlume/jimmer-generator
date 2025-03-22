@@ -44,7 +44,7 @@ class Frame(private val modules: List<Module>, private val tables: List<DbObj>) 
             okText(ui("button_ok"))
             ok {
                 panel.apply()
-                if (tables.count { it.selected } == 0) {
+                if (tables.count { it.selected || it.children.any(DbObj::selected) } == 0) {
                     Messages.showWarningDialog(project, message("table_not_select_warning"), ui("warning"))
                     return@ok false
                 }

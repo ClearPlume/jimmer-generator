@@ -26,7 +26,7 @@ class CodeGenerator(private val data: FrameData, private val tables: List<DbObj>
 
         // 保存选中的表
         val velocityEngine = VelocityEngine()
-        val selectedTables = tables.filter { it.selected }
+        val selectedTables = tables.filter { it.selected || it.children.any(DbObj::selected) }
         selectedTables.forEach {
             val selectedColumns = it.children.filter { column -> column.selected }
             // 计算实体和属性的注解列表
