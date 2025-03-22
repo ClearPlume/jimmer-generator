@@ -1,10 +1,13 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-val kotlinVersion by extra("1.8.20")
+val kotlinVersion by extra("2.1.20")
 val jacksonVersion by extra("2.15.2")
 
 val sinceVersion by extra("223.7571.182")
-val untilVersion by extra("243.*")
+val untilVersion by extra("251.*")
 
 val certificateChainValue: String = findProperty("certificateChainValue") as String
 val privateKeyValue: String = findProperty("privateKeyValue") as String
@@ -12,9 +15,12 @@ val passwordValue: String = findProperty("passwordValue") as String
 val tokenValue: String = findProperty("tokenValue") as String
 
 plugins {
-    id("org.jetbrains.intellij") version "1.13.2"
-    id("java")
-    kotlin("jvm") version "1.8.20"
+    java
+
+    kotlin("jvm") version "2.1.20"
+
+    id("org.jetbrains.intellij.platform") version "2.3.0"
+    id("org.jetbrains.changelog") version "2.2.1"
 }
 
 group = "top.fallenangel"
@@ -22,58 +28,85 @@ version = "0.3.12"
 
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
+    intellijPlatform {
+        create("IU", sinceVersion, false)
+        bundledPlugins("com.intellij.database")
+
+        testFramework(TestFrameworkType.Platform)
+    }
+
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    pluginName.set("JimmerGenerator")
-    type.set("IU") // Target IDE Platform
-    version.set("2022.3")
-    plugins.set(
-        listOf(
-            "com.intellij.java",
-            "com.intellij.database"
-        )
-    )
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+        freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
+    }
 }
 
-tasks {
-    // Set the JVM compatibility versions
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
-    withType<KotlinCompile> {
-        kotlinOptions.apply {
-            jvmTarget = "17"
-            apiVersion = "1.8"
+changelog {
+    keepUnreleasedSection = false
+    unreleasedTerm = "Unreleased"
+    groups = listOf("Added", "Changed", "Deprecated", "Removed", "Fixed")
+    headerParserRegex = """^((0|[1-9]\d*)(\.(0|[1-9]\d*)){2,3}(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}"""
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        id = "net.fallingangel.jimmer-generator"
+        name = "JimmerGenerator"
+
+        description = markdownToHTML(File(projectDir, "README.md").readText())
+        changeNotes = changelog.render(Changelog.OutputType.HTML)
+
+        vendor {
+            name = "the_FallenAngel"
+            email = "the.fallenangel.965@gmail.com"
+            url = "https://fallingangel.net"
+        }
+
+        ideaVersion {
+            sinceBuild = sinceVersion
+            untilBuild = untilVersion
         }
     }
 
-    patchPluginXml {
-        sinceBuild.set(sinceVersion)
-        untilBuild.set(untilVersion)
+    pluginVerification {
+        ides.recommended()
     }
 
+    publishing {
+        token = tokenValue
+        channels.add("Stable")
+    }
+
+    signing {
+        certificateChain = certificateChainValue
+        privateKey = privateKeyValue
+        password = passwordValue
+    }
+}
+
+tasks {
     runIde {
         jvmArgs("-Xms128m", "-Xmx4096m", "-XX:ReservedCodeCacheSize=512m")
     }
 
-    signPlugin {
-        certificateChain.set(certificateChainValue)
-        privateKey.set(privateKeyValue)
-        password.set(passwordValue)
-    }
-
-    publishPlugin {
-        channels.add("Stable")
-        token.set(tokenValue)
+    test {
+        systemProperty("idea.home.path", intellijPlatform.sandboxContainer.get().toString())
     }
 }

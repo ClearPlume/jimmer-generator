@@ -3,5 +3,6 @@ build/
 .idea/
 out/
 .run/
+.intellijPlatform/
 
 *.iml
