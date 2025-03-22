@@ -67,8 +67,8 @@ changelog {
 
 intellijPlatform {
     pluginConfiguration {
-        id = "net.fallingangel.jimmer-generator"
-        name = "JimmerGenerator"
+        id = "top.fallenangel.jimmer-generator"
+        name = "Jimmer-Generator"
 
         description = markdownToHTML(File(projectDir, "README.md").readText())
         changeNotes = changelog.render(Changelog.OutputType.HTML)
