@@ -12,7 +12,7 @@ class DialogConstructor(project: Project) : DialogWrapper(project) {
 
     fun centerPanel(panel: DialogPanel) {
         this.panel = panel
-        this.panel.withMinimumHeight(200)
+        this.panel.withMinimumHeight(600)
     }
 
     fun okText(text: String) = setOKButtonText(text)

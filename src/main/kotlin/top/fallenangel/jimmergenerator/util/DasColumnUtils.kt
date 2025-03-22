@@ -18,8 +18,16 @@ import top.fallenangel.jimmergenerator.model.type.Parameter
  */
 fun DasNamed.field2property(prefix: String = "", suffix: String = "", uncapitalize: Boolean = false): String {
     var property = name.lowercase()
-    property = if (property == prefix) property else property.replaceFirst(Regex("^${prefix}_?", RegexOption.IGNORE_CASE), "")
-    property = if (property == suffix) property else property.replaceFirst(Regex("_?$suffix$", RegexOption.IGNORE_CASE), "")
+    property = if (property == prefix) {
+        property
+    } else {
+        property.replaceFirst(Regex("^${prefix}_?", RegexOption.IGNORE_CASE), "")
+    }
+    property = if (property == suffix) {
+        property
+    } else {
+        property.replaceFirst(Regex("_?$suffix$", RegexOption.IGNORE_CASE), "")
+    }
     return property.sneak2camel(uncapitalize)
 }
 
@@ -40,7 +48,7 @@ val DasColumn.isBusinessKey: Boolean
 fun DasColumn.captureType(language: Language): Class {
     val typeMappings = SettingStorageComponent.typeMappings
     for (typeMapping in typeMappings) {
-        if (Regex(typeMapping.column, RegexOption.IGNORE_CASE).matches(dataType.specification)) {
+        if (Regex(typeMapping.column, RegexOption.IGNORE_CASE).matches(dasType.specification)) {
             return when (language) {
                 Language.JAVA -> {
                     if (DasUtil.isPrimary(this) && typeMapping.javaPrimitives != null) {
@@ -83,18 +91,18 @@ fun DasColumn.captureAnnotations(language: Language): MutableList<Annotation> {
     val primary = DasUtil.isPrimary(this)
 
     if (primary) {
-        annotations.add(Annotation("Id", Constant.jimmerPackage, emptyList()))
+        annotations.add(Annotation("Id", Constant.JIMMER_PACKAGE, emptyList()))
         annotations.add(
             Annotation(
-                "GeneratedValue", Constant.jimmerPackage,
-                listOf(Parameter("strategy", "GenerationType.IDENTITY", Class("GenerationType", Constant.jimmerPackage)))
+                "GeneratedValue", Constant.JIMMER_PACKAGE,
+                listOf(Parameter("strategy", "GenerationType.IDENTITY", Class("GenerationType", Constant.JIMMER_PACKAGE)))
             )
         )
     } else if (language == Language.JAVA && !isNotNull) {
         annotations.add(Annotation("Null", "javax.validation.constraints", emptyList()))
     }
     if (isBusinessKey) {
-        annotations.add(Annotation("Key", Constant.jimmerPackage, emptyList()))
+        annotations.add(Annotation("Key", Constant.JIMMER_PACKAGE, emptyList()))
     }
     return annotations
 }

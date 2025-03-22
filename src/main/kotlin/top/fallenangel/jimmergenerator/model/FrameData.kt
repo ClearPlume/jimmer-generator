@@ -14,7 +14,33 @@ data class FrameData(
     var fieldPrefix: String = "",
     var fieldSuffix: String = "",
     var entityPrefix: String = "",
-    var entitySuffix: String = ""
+    var entitySuffix: String = "",
 ) {
     lateinit var module: Module
+
+    override fun toString(): String {
+        return buildString {
+            append("FrameData(language=")
+            append(language)
+            append(", sourceRoot=")
+            append(sourceRoot)
+            append(", `package`='")
+            append(`package`)
+            append("', tablePrefix='")
+            append(tablePrefix)
+            append("', tableSuffix='")
+            append(tableSuffix)
+            append("', fieldPrefix='")
+            append(fieldPrefix)
+            append("', fieldSuffix='")
+            append(fieldSuffix)
+            append("', entityPrefix='")
+            append(entityPrefix)
+            append("', entitySuffix='")
+            append(entitySuffix)
+            append("', module=")
+            append(module)
+            append(")")
+        }
+    }
 }

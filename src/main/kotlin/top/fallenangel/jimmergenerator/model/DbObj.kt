@@ -69,7 +69,11 @@ data class DbObj(
         }
 
     val children: List<DbObj>
-        get() = if (isTable) super.children.map { it as DbObj } else emptyList()
+        get() = if (isTable) {
+            children().toList().filterIsInstance<DbObj>()
+        } else {
+            emptyList()
+        }
 
     fun captureAnnotations(language: Language, dbType: DBType) {
         annotations.clear()
@@ -79,7 +83,7 @@ data class DbObj(
             val needQuotes = objName.contains(Regex("\\W|^\\d"))
             annotations.add(
                 Annotation(
-                    nameAnnotation, Constant.jimmerPackage, listOf(
+                    nameAnnotation, Constant.JIMMER_PACKAGE, listOf(
                         Parameter("name", if (needQuotes) "${dbType.l}$objName${dbType.r}" else objName, Class("String"))
                     )
                 )
@@ -90,11 +94,11 @@ data class DbObj(
             annotations.addAll(SettingStorageComponent.tableDefaultAnnotations)
         } else {
             if (isPrimary) {
-                annotations.add(Annotation("Id", Constant.jimmerPackage, emptyList()))
+                annotations.add(Annotation("Id", Constant.JIMMER_PACKAGE, emptyList()))
                 annotations.add(
                     Annotation(
-                        "GeneratedValue", Constant.jimmerPackage,
-                        listOf(Parameter("strategy", "GenerationType.IDENTITY", Class("GenerationType", Constant.jimmerPackage)))
+                        "GeneratedValue", Constant.JIMMER_PACKAGE,
+                        listOf(Parameter("strategy", "GenerationType.IDENTITY", Class("GenerationType", Constant.JIMMER_PACKAGE)))
                     )
                 )
             }
@@ -102,7 +106,7 @@ data class DbObj(
                 annotations.add(Annotation("Null", "javax.validation.constraints", emptyList()))
             }
             if (businessKey) {
-                annotations.add(Annotation("Key", Constant.jimmerPackage, emptyList()))
+                annotations.add(Annotation("Key", Constant.JIMMER_PACKAGE, emptyList()))
             }
         }
         annotations.sortBy { it.toString().length }

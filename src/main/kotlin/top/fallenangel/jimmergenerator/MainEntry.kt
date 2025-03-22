@@ -11,8 +11,8 @@ import com.intellij.psi.PsiElement
 import top.fallenangel.jimmergenerator.component.SettingStorageComponent
 import top.fallenangel.jimmergenerator.enums.DBType
 import top.fallenangel.jimmergenerator.enums.Language
-import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.Context
+import top.fallenangel.jimmergenerator.model.DbObj
 import top.fallenangel.jimmergenerator.model.type.Annotation
 import top.fallenangel.jimmergenerator.model.type.Class
 import top.fallenangel.jimmergenerator.model.type.Parameter
@@ -22,7 +22,7 @@ import top.fallenangel.jimmergenerator.util.*
 class MainEntry : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
-        val modules = ModuleManager.getInstance(project).modules
+        val modules = ModuleManager.getInstance(project).modules.toList()
         val dbTables = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY)?.map { it as DbTable } ?: return
         val dbType = DBType.valueOf(dbTables[0].dataSource.dbms)
 
@@ -31,7 +31,7 @@ class MainEntry : AnAction() {
 
         val tables = dbTables.map {
             val tableAnnotation = Annotation(
-                "Table", Constant.jimmerPackage, listOf(
+                "Table", Constant.JIMMER_PACKAGE, listOf(
                     Parameter("name", it.name, Class("String"))
                 )
             )
@@ -45,13 +45,15 @@ class MainEntry : AnAction() {
                 DasUtil.getColumns(it)
                         .toList()
                         .map { column ->
-                            DbObj(
-                                column, true, column.name,
-                                column.field2property(uncapitalize = true), column.isBusinessKey,
-                                column.captureType(Language.JAVA),
-                                column.captureAnnotations(Language.JAVA),
-                                column.comment
-                            ).apply { table.add(this) }
+                            table.add(
+                                DbObj(
+                                    column, true, column.name,
+                                    column.field2property(uncapitalize = true), column.isBusinessKey,
+                                    column.captureType(Language.JAVA),
+                                    column.captureAnnotations(Language.JAVA),
+                                    column.comment
+                                )
+                            )
                         }
             }
         }
