@@ -70,101 +70,107 @@ class Frame(private val modules: List<Module>, private val tables: List<DbObj>) 
 
     private fun centerPanel() = panel {
         // 基本设置块
-        group(ui("split_basic_setting")) {
+        groupRowsRange(ui("split_basic_setting")) {
             val sourceRoots = mutableListOf(Constant.dummyFile)
             sourceRoots.addAll(ModuleRootManager.getInstance(modules[0]).getSourceRoots(false))
             val sourceRootModel = CollectionComboBoxModel(sourceRoots)
 
-            row {
-                // 语言选择单选框
-                panel {
-                    buttonsGroup {
-                        row(ui("label_language")) {
-                            radioButton(ui("radio_java"), Language.JAVA)
-                            radioButton(ui("radio_kotlin"), Language.KOTLIN)
-                        }
+            twoColumnsRow(
+                {
+                    // 语言选择单选框
+                    label(ui("label_language"))
+                    panel {
+                        buttonsGroup {
+                            row {
+                                radioButton(ui("radio_java"), Language.JAVA)
+                                radioButton(ui("radio_kotlin"), Language.KOTLIN)
+                            }
+                        }.bind(data::language)
                     }
-                            .bind(data::language)
-                }
+                },
+                {
+                    // 模块选择下拉框
+                    label(ui("label_module"))
+                    comboBox(modules, SimpleListCellRenderer.create { label, value, _ -> label.text = value.name })
+                            .bindItem(data::module.toNullableProperty())
+                            .component
+                            .whenItemSelected { module ->
+                                sourceRoots.clear()
+                                sourceRoots.add(Constant.dummyFile)
+                                sourceRoots.addAll(ModuleRootManager.getInstance(module).getSourceRoots(false))
 
-                // 模块选择下拉框
-                panel {
-                    row(ui("label_module")) {
-                        comboBox(modules, SimpleListCellRenderer.create { label, value, _ -> label.text = value.name })
-                                .bindItem(data::module.toNullableProperty())
-                                .component
-                                .whenItemSelected { module ->
-                                    sourceRoots.clear()
-                                    sourceRoots.add(Constant.dummyFile)
-                                    sourceRoots.addAll(ModuleRootManager.getInstance(module).getSourceRoots(false))
+                                data.sourceRoot = Constant.dummyFile
+                                sourceRootModel.selectedItem = Constant.dummyFile
+                            }
+                },
+            )
 
-                                    data.sourceRoot = Constant.dummyFile
-                                    sourceRootModel.selectedItem = Constant.dummyFile
-                                }
-                    }
-                }
-            }
-
-            row {
-                panel {
+            twoColumnsRow(
+                {
                     // Source选择下拉框
-                    row(ui("label_module_source")) {
-                        comboBox(
-                            sourceRootModel,
-                            SimpleListCellRenderer.create { label, value, _ ->
-                                label.text = value.name
-                                label.toolTipText = value.path
-                            },
-                        )
-                                .bindItem(data::sourceRoot.toNullableProperty())
-                    }
-                }
-
-                panel {
+                    label(ui("label_module_source"))
+                    comboBox(
+                        sourceRootModel,
+                        SimpleListCellRenderer.create { label, value, _ ->
+                            label.text = value.name
+                            label.toolTipText = value.path
+                        },
+                    ).bindItem(data::sourceRoot.toNullableProperty())
+                },
+                {
                     // 包选择弹窗
-                    row(ui("label_package")) {
-                        val packageText = textField().bindText(data::`package`).component
-                        button(ui("button_choose")) {
-                            panel.apply()
-                            if (data.sourceRoot == Constant.dummyFile) {
-                                Messages.showWarningDialog(project, message("source_root_not_select_warning"), ui("warning"))
-                                return@button
-                            }
-                            val chooser = PackageChooserDialog(ui("dialog_title_package"), data.module)
-                            if (chooser.showAndGet()) {
-                                packageText.text = chooser.selectedPackage.qualifiedName
-                            }
+                    label(ui("label_package"))
+                    val packageText = textField().bindText(data::`package`).component
+                    button(ui("button_choose")) {
+                        panel.apply()
+                        if (data.sourceRoot == Constant.dummyFile) {
+                            Messages.showWarningDialog(project, message("source_root_not_select_warning"), ui("warning"))
+                            return@button
+                        }
+                        val chooser = PackageChooserDialog(ui("dialog_title_package"), data.module)
+                        if (chooser.showAndGet()) {
+                            packageText.text = chooser.selectedPackage.qualifiedName
                         }
                     }
-                }
-            }
+                },
+            )
         }
 
         // 命名设置块
-        group(ui("split_naming_setting")) {
-            row {
-                textField().bindText(data::tablePrefix)
-                        .label(ui("label_remove_table_prefix"))
-                        .comment(ui("comment_split_naming"), -1)
+        groupRowsRange(ui("split_naming_setting")) {
+            twoColumnsRow(
+                {
+                    label(ui("label_remove_table_prefix"))
+                    textField().bindText(data::tablePrefix)
+                },
+                {
+                    label(ui("label_remove_table_suffix"))
+                    textField().bindText(data::tableSuffix)
+                },
+            ).rowComment(ui("comment_split_naming"))
 
-                textField().bindText(data::tableSuffix)
-                        .label(ui("label_remove_table_suffix"))
-            }
-            row {
-                textField().bindText(data::entityPrefix)
-                        .label(ui("label_add_entity_prefix"))
+            twoColumnsRow(
+                {
+                    label(ui("label_add_entity_prefix"))
+                    textField().bindText(data::entityPrefix)
+                },
+                {
+                    label(ui("label_add_entity_suffix"))
+                    textField().bindText(data::entitySuffix)
+                },
+            )
 
-                textField().bindText(data::entitySuffix)
-                        .label(ui("label_add_entity_suffix"))
-            }
-            row {
-                textField().bindText(data::fieldPrefix)
-                        .label(ui("label_remove_field_prefix"))
-                        .comment(ui("comment_split_naming"), -1)
+            twoColumnsRow(
+                {
+                    label(ui("label_remove_field_prefix"))
+                    textField().bindText(data::fieldPrefix)
+                },
+                {
+                    label(ui("label_remove_field_suffix"))
+                    textField().bindText(data::fieldSuffix)
+                },
+            ).rowComment(ui("comment_split_naming"))
 
-                textField().bindText(data::fieldSuffix)
-                        .label(ui("label_remove_field_suffix"))
-            }
             row {
                 button(ui("button_apply_naming_setting")) {
                     panel.apply()

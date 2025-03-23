@@ -10,6 +10,10 @@ class DialogConstructor(project: Project) : DialogWrapper(project) {
     private lateinit var okEvent: () -> Boolean
     private lateinit var cancelEvent: () -> Boolean
 
+    init {
+        isResizable = false
+    }
+
     fun centerPanel(panel: DialogPanel) {
         this.panel = panel
         this.panel.withMinimumHeight(600)
