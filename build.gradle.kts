@@ -36,7 +36,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        create("IU", sinceVersion, false)
+        intellijIdeaUltimate(sinceVersion, false)
         bundledPlugins("com.intellij.java", "com.intellij.database")
 
         testFramework(TestFrameworkType.Platform)
