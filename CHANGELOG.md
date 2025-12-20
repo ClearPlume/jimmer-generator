@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [0.3.14] - 2025-12-20
+
+### Added
+
+* Support for 2025.3, **Remove 2023.2**, support for 2023.3 will be removed when 2025.4 is released
+
 ## [0.3.13] - 2025-03-22
 
 ### Changed

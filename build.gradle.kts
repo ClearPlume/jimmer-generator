@@ -3,11 +3,11 @@ import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-val kotlinVersion by extra("2.1.20")
-val jacksonVersion by extra("2.15.2")
+val kotlinVersion by extra("2.3.0")
+val jacksonVersion by extra("2.20.1")
 
-val sinceVersion by extra("223.7571.182")
-val untilVersion by extra("251.*")
+val sinceVersion by extra("233.15619.7")
+val untilVersion by extra("253.*")
 
 val certificateChainValue: String = findProperty("certificateChainValue") as String
 val privateKeyValue: String = findProperty("privateKeyValue") as String
@@ -17,14 +17,14 @@ val tokenValue: String = findProperty("tokenValue") as String
 plugins {
     java
 
-    kotlin("jvm") version "2.1.20"
+    kotlin("jvm") version "2.3.0"
 
-    id("org.jetbrains.intellij.platform") version "2.3.0"
-    id("org.jetbrains.changelog") version "2.2.1"
+    id("org.jetbrains.intellij.platform") version "2.10.5"
+    id("org.jetbrains.changelog") version "2.5.0"
 }
 
 group = "top.fallenangel"
-version = "0.3.13"
+version = "0.3.14"
 
 repositories {
     mavenCentral()
@@ -36,7 +36,9 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaUltimate(sinceVersion, false)
+        intellijIdeaUltimate(sinceVersion) {
+            useInstaller = false
+        }
         bundledPlugins("com.intellij.java", "com.intellij.database")
 
         testFramework(TestFrameworkType.Platform)
@@ -63,7 +65,7 @@ changelog {
     unreleasedTerm = "Unreleased"
     groups = listOf("Added", "Changed", "Deprecated", "Removed", "Fixed")
     headerParserRegex =
-        """^((0|[1-9]\d*)(\.(0|[1-9]\d*)){2,3}(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)${'$'}"""
+        """^((0|[1-9]\d*)(\.(0|[1-9]\d*)){2,3}(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)$"""
 }
 
 intellijPlatform {
