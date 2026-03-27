@@ -1,0 +1,14 @@
+[versions]
+kotlin = "2.3.0"
+intellij = "2.10.5"
+changelog = "2.5.0"
+jackson = "2.21.2"
+
+[libraries]
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+jackson = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+intellij-platform = { id = "org.jetbrains.intellij.platform", version.ref = "intellij" }
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }

@@ -16,25 +16,25 @@ class SelectedColumnInfo(private val tableRef: Reference<TreeTableView>, name: S
         when {
             item.isTable && value -> {
                 item.selected = true
-                item.children.forEach { it.selected = true }
+                item.childObjs.forEach { it.selected = true }
                 tableRef.value.tableModel.valueForPathChanged(TreePath(item.path), true)
             }
 
             !item.isTable || value -> {
                 item.selected = value
-                item.children.forEach { it.selected = value }
+                item.childObjs.forEach { it.selected = value }
                 tableRef.value.tableModel.valueForPathChanged(TreePath(item.path), value)
             }
 
             else -> {
-                val allSelected = item.children.all { it.selected }
+                val allSelected = item.childObjs.all { it.selected }
                 if (allSelected) {
                     item.selected = false
-                    item.children.forEach { it.selected = false }
+                    item.childObjs.forEach { it.selected = false }
                     tableRef.value.tableModel.valueForPathChanged(TreePath(item.path), false)
                 } else {
                     item.selected = true
-                    item.children.forEach { it.selected = true }
+                    item.childObjs.forEach { it.selected = true }
                     tableRef.value.tableModel.valueForPathChanged(TreePath(item.path), true)
                 }
             }
@@ -50,11 +50,11 @@ class SelectedColumnInfo(private val tableRef: Reference<TreeTableView>, name: S
             return@TableCellRenderer if (!item.isTable) {
                 ThreeStateCheckBox(if (value as Boolean) ThreeStateCheckBox.State.SELECTED else ThreeStateCheckBox.State.NOT_SELECTED)
             } else {
-                val allSelected = item.children.all { it.selected }
+                val allSelected = item.childObjs.all { it.selected }
                 if (allSelected) {
                     ThreeStateCheckBox(ThreeStateCheckBox.State.SELECTED)
                 } else {
-                    val allNotSelected = item.children.all { !it.selected }
+                    val allNotSelected = item.childObjs.all { !it.selected }
                     if (allNotSelected) {
                         ThreeStateCheckBox(ThreeStateCheckBox.State.NOT_SELECTED)
                     } else {

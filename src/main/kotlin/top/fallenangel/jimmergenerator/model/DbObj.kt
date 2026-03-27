@@ -68,7 +68,7 @@ data class DbObj(
             }
         }
 
-    val children: List<DbObj>
+    val childObjs: List<DbObj>
         get() = if (isTable) {
             children().toList().filterIsInstance<DbObj>()
         } else {

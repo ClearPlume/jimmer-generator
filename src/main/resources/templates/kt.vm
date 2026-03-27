@@ -15,7 +15,7 @@ import $import
 #end
 #parseAnnotations($table.annotations)
 interface $table.property {
-#foreach($field in $table.children)
+#foreach($field in $table.childObjs)
     #if($field.selected)
         #if($velocityCount != 1)
 

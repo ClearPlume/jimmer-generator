@@ -44,7 +44,7 @@ class Frame(private val modules: List<Module>, private val tables: List<DbObj>) 
             okText(ui("button_ok"))
             ok {
                 panel.apply()
-                if (tables.count { it.selected || it.children.any(DbObj::selected) } == 0) {
+                if (tables.count { it.selected || it.childObjs.any(DbObj::selected) } == 0) {
                     Messages.showWarningDialog(project, message("table_not_select_warning"), ui("warning"))
                     return@ok false
                 }
@@ -179,7 +179,7 @@ class Frame(private val modules: List<Module>, private val tables: List<DbObj>) 
                         val entityName = table.field2property(data.tablePrefix, data.tableSuffix)
                         table.property = "${data.entityPrefix}$entityName${data.entitySuffix}"
                         table.type = Class("${data.entityPrefix}$entityName${data.entitySuffix}")
-                        table.children.forEach {
+                        table.childObjs.forEach {
                             it.property = it.field2property(data.fieldPrefix, data.fieldSuffix, true)
                         }
                     }

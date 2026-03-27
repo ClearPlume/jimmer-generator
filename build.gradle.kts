@@ -3,11 +3,8 @@ import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-val kotlinVersion by extra("2.3.0")
-val jacksonVersion by extra("2.20.1")
-
-val sinceVersion by extra("233.15619.7")
-val untilVersion by extra("253.*")
+val sinceVersion by extra("241.14494.240")
+val untilVersion by extra("261.*")
 
 val certificateChainValue: String = findProperty("certificateChainValue") as String
 val privateKeyValue: String = findProperty("privateKeyValue") as String
@@ -17,14 +14,13 @@ val tokenValue: String = findProperty("tokenValue") as String
 plugins {
     java
 
-    kotlin("jvm") version "2.3.0"
-
-    id("org.jetbrains.intellij.platform") version "2.10.5"
-    id("org.jetbrains.changelog") version "2.5.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.intellij.platform)
+    alias(libs.plugins.changelog)
 }
 
 group = "top.fallenangel"
-version = "0.3.14"
+version = "0.3.15"
 
 repositories {
     mavenCentral()
@@ -44,8 +40,8 @@ dependencies {
         testFramework(TestFrameworkType.Platform)
     }
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    implementation(libs.kotlin.reflect)
+    implementation(libs.jackson)
 }
 
 kotlin {

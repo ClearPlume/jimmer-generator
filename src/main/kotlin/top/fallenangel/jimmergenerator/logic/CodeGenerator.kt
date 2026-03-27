@@ -26,26 +26,26 @@ class CodeGenerator(private val data: FrameData, private val tables: List<DbObj>
 
         // 保存选中的表
         val velocityEngine = VelocityEngine()
-        val selectedTables = tables.filter { it.selected || it.children.any(DbObj::selected) }
+        val selectedTables = tables.filter { it.selected || it.childObjs.any(DbObj::selected) }
         selectedTables.forEach {
-            val selectedColumns = it.children.filter { column -> column.selected }
+            val selectedColumns = it.childObjs.filter { column -> column.selected }
             // 计算实体和属性的注解列表
             it.captureAnnotations(data.language, dbType)
             selectedColumns.forEach { column -> column.captureAnnotations(data.language, dbType) }
 
             // 计算每张表的注解导包列表
-            val tableAnnotations = it.annotations + selectedColumns.map { column -> column.annotations }.flatten()
+            val tableAnnotations = it.annotations + selectedColumns.flatMap { column -> column.annotations }
             val annotationImports = tableAnnotations.map { annotation -> annotation.import }
-            val parameterImports = tableAnnotations.map { annotation -> annotation.parameters }
-                    .flatten()
-                    .filter { param -> param.type.`package`.isNotBlank() }
-                    .map { param -> param.type.import }
+            val parameterImports = tableAnnotations
+                .flatMap { annotation -> annotation.parameters }
+                .filter { param -> param.type.`package`.isNotBlank() }
+                .map { param -> param.type.import }
 
             // 计算每张表的类型导包列表
             val fieldImports = selectedColumns
-                    .map { field -> field.type }
-                    .filter { type -> type.`package`.isNotBlank() }
-                    .map { type -> type.import }
+                .map { field -> field.type }
+                .filter { type -> type.`package`.isNotBlank() }
+                .map { type -> type.import }
 
             val writer = StringWriter()
             val tableEntityName = it.property
