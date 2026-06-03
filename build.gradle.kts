@@ -6,10 +6,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 val sinceVersion by extra("241.14494.240")
 val untilVersion by extra("261.*")
 
-val certificateChainValue: String = findProperty("certificateChainValue") as String
-val privateKeyValue: String = findProperty("privateKeyValue") as String
-val passwordValue: String = findProperty("passwordValue") as String
-val tokenValue: String = findProperty("tokenValue") as String
+val userHome: String = System.getProperty("user.home")
+val certificateChainFileValue = file("$userHome/.gradle/chain.crt")
+val privateKeyFileValue = file("$userHome/.gradle/private.pem")
 
 plugins {
     java
@@ -88,15 +87,15 @@ intellijPlatform {
         ides.recommended()
     }
 
-    publishing {
-        token = tokenValue
-        channels.add("Stable")
+    signing {
+        certificateChainFile = certificateChainFileValue
+        privateKeyFile = privateKeyFileValue
+        password = providers.gradleProperty("intellijPlatformSigningPassword")
     }
 
-    signing {
-        certificateChain = certificateChainValue
-        privateKey = privateKeyValue
-        password = passwordValue
+    publishing {
+        token = providers.gradleProperty("intellijPlatformPublishingToken")
+        channels.add("Stable")
     }
 }
 
